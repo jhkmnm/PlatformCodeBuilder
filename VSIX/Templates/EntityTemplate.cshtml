@@ -1,0 +1,66 @@
+﻿@using PlatformCodeBuilder.Models.TemplateModels
+@inherits RazorEngine.Templating.TemplateBase<PlatformCodeBuilder.Models.TemplateModels.EntityFileModel>
+using System;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
+using Abp;
+using Abp.Auditing;
+using Abp.Domain.Entities.Auditing;
+
+namespace @(Model.Namespace).@(Model.DirName)
+{
+    /// <summary>
+    /// @(Model.Description)
+    /// </summary>
+    [Audited]
+    [Table("@(Model.TableName)")]
+    public class @(Model.Name) : FullAuditedAggregateRoot<Guid>
+    {
+        private @(Model.Name)()
+        {
+        }
+
+        public @(Model.Name)(Guid id, @(Model.Parameters))
+        {
+            SetProperties(id, @(Model.MethodParameters));
+        }
+
+        private bool SetProperties(Guid id, @(Model.Parameters))
+        {
+            @foreach (ClassProperty classProperty in Model.ClassPropertys)
+            {
+                if (classProperty.PropertyType == "string" && !classProperty.IsNull)
+                {
+            <text>Check.NotNullOrEmpty(@classProperty.FirstLowerName, "@classProperty.CnName");</text>
+                }
+            }
+
+            @foreach (ClassProperty classProperty in Model.ClassPropertys)
+            {
+            <text>@classProperty.Name = @classProperty.FirstLowerName;</text>
+            }
+            
+            return true;
+        }
+
+        #region 表字段
+        @foreach (ClassProperty classProperty in Model.ClassPropertys)
+        {
+        <text>/// <summary></text>
+        <text>/// @Raw(@classProperty.CnName)</text>
+        <text>/// < /summary></text>
+        <text>[Description("@Raw(@classProperty.CnName)")]</text>
+            if (classProperty.ClassAttributes != null && classProperty.ClassAttributes.Count > 0)
+            {
+                foreach (var classAttribute in classProperty.ClassAttributes)
+                {
+        <text>@Raw(@classAttribute.NameValue)</text>
+                }
+            }
+        <text>public @classProperty.PropertyType @classProperty.Name { get; protected set; }</text>
+        }
+        #endregion
+    }
+}

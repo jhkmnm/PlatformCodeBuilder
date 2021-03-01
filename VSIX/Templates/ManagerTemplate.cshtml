@@ -1,0 +1,39 @@
+﻿@using PlatformCodeBuilder.Models.TemplateModels
+@inherits RazorEngine.Templating.TemplateBase<PlatformCodeBuilder.Models.TemplateModels.EntityFileModel>
+using System;
+using System.Threading.Tasks;
+using Abp;
+using Abp.Domain.Repositories;
+using @(Model.EntityNamespace).Dtos;
+
+namespace @(Model.Namespace).@(Model.DirName)
+{
+    public class @(Model.Name)Manager: DomainServiceBase
+    {
+        private readonly IRepository<@(Model.Name), Guid> _@(Model.FirstLowerName)Repository;
+        private readonly IGuidGenerator _guidGenerator;
+
+        public @(Model.Name)Manager(
+            IRepository<@(Model.Name), Guid> @(Model.FirstLowerName)Repository,
+            IGuidGenerator guidGenerator
+        )
+        {
+            _@(Model.FirstLowerName)Repository = @(Model.FirstLowerName)Repository;
+            _guidGenerator = guidGenerator;
+        }
+
+        /// <summary>
+        /// 创建@(Model.Description)
+        /// </summary>
+        /// <param name="createDto"></param>
+        /// <returns></returns>
+        public virtual async Task<Guid> CreateAsync(Create@(Model.Name)Dto createDto)
+        {
+            var id = _guidGenerator.Create();
+            var entity = new @(Model.Name)(id, @(Model.CreateParameters));
+
+            await _@(Model.FirstLowerName)Repository.InsertAsync(entity);
+            return id;
+        }
+    }
+}

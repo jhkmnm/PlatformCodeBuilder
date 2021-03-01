@@ -1,0 +1,23 @@
+﻿@using PlatformCodeBuilder.Models.TemplateModels
+@inherits RazorEngine.Templating.TemplateBase<PlatformCodeBuilder.Models.TemplateModels.DtoFileModel>
+using System;
+using Abp.AutoMapper;
+using @(Model.UsingName);
+
+namespace @(Model.Namespace)
+{
+    /// <summary>
+    /// @(Model.Description)
+    /// </summary>
+    [AutoMapFrom(typeof(@(Model.EntityName)))]
+    public class @(Model.Name)
+    {
+        @foreach (ClassProperty classProperty in Model.ClassProperties)
+        {
+        <text>/// <summary></text>
+        <text>/// @Raw(@classProperty.CnName)</text>
+        <text>/// < /summary></text>
+        <text>public @classProperty.PropertyType @classProperty.Name { get; set; }</text>
+        }
+    }
+}

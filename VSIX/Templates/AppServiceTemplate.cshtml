@@ -1,0 +1,64 @@
+﻿@using PlatformCodeBuilder.Models.TemplateModels
+@inherits RazorEngine.Templating.TemplateBase<PlatformCodeBuilder.Models.TemplateModels.EntityFileModel>
+using Abp.Application.Services.Dto;
+using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using @(Model.EntityNamespace);
+using @(Model.EntityNamespace).Dtos;
+using @(Model.Namespace).@(Model.DirName).Dtos;
+
+namespace @(Model.Namespace).@(Model.DirName)
+{
+    public class @(Model.Name)AppService : AppServiceBase
+    {
+        private readonly IRepository<@(Model.Name), Guid> _@(Model.FirstLowerName)Repository;
+        private readonly @(Model.Name)Manager _@(Model.FirstLowerName)Manager;
+
+        public @(Model.Name)AppService(
+            IRepository<@(Model.Name), Guid> @(Model.FirstLowerName)Repository,
+            @(Model.Name)Manager @(Model.FirstLowerName)Manager
+        )
+        {
+            _@(Model.FirstLowerName)Repository = @(Model.FirstLowerName)Repository;
+            _@(Model.FirstLowerName)Manager = @(Model.FirstLowerName)Manager;
+        }
+
+        public async Task<Guid> Create@(Model.Name)Async(Create@(Model.Name)Dto input)
+        {
+            return await _@(Model.FirstLowerName)Manager.CreateAsync(input);
+        }
+
+        public async Task<PagedResultDto<GetPaged@(Model.Name)Output>> GetPaged@(Model.Name)Async(GetPaged@(Model.Name)Input input)
+        {
+            var query = BuildGetPaged@(Model.Name)(input);
+
+            return await ToPagedResult(query, input, input.Sorting);
+        }
+
+        protected virtual IQueryable<GetPaged@(Model.Name)Output> BuildGetPaged@(Model.Name)(GetPaged@(Model.Name)Input input)
+        {
+            var query = _@(Model.FirstLowerName)Repository.GetAll().AsNoTracking()
+            @foreach(ClassProperty classProperty in Model.ClassPropertys)
+            {
+                if(classProperty.PropertyType == "string")
+                {
+                <text>.WhereIf(input.@(classProperty.Name).IsNotNullOrEmpty(), w => w.@(classProperty.Name) == input.@classProperty.Name)</text>
+                }
+                else if(classProperty.PropertyType.EndsWith("?"))
+                {
+                <text>.WhereIf(input.@(@classProperty.Name).HasValue, w => w.@classProperty.Name == input.@classProperty.Name)</text>
+                }
+                else
+                {
+                <text>.Where(w => w.@classProperty.Name == input.@classProperty.Name)</text>
+                }
+            }
+                .Select(s => ObjectMapper.Map<GetPaged@(Model.Name)Output>(s));
+            return query;
+        }
+    }
+}
