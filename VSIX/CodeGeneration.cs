@@ -41,8 +41,8 @@ namespace PlatformCodeBuilder
         private CodeGeneration(AsyncPackage package, OleMenuCommandService commandService)
         {
             InitRazorEngine();
-            this.package = package ?? throw new ArgumentNullException("package为空"+nameof(package));
-            commandService = commandService ?? throw new ArgumentNullException("commandService为空"+nameof(commandService));
+            this.package = package ?? throw new ArgumentNullException(nameof(package));
+            commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
             var menuCommandID = new CommandID(CommandSet, CommandId);
             var menuItem = new MenuCommand(this.Execute, menuCommandID);
@@ -55,6 +55,8 @@ namespace PlatformCodeBuilder
             {
                 TemplateManager = new EmbeddedResourceTemplateManager(typeof(Template))
             };
+            config.CompilerServiceFactory = new RazorEngine.Roslyn.RoslynCompilerServiceFactory();
+            config.CompilerServiceFactory.CreateCompilerService(RazorEngine.Language.CSharp);            
             Engine.Razor = RazorEngineService.Create(config);
         }
 

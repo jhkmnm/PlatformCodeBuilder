@@ -33,12 +33,12 @@ namespace PlatformCodeBuilder
 
             InitializeComponent();
 
-            //List<EntityModel> dataSource = new List<EntityModel>();
-            //dataSource.Add(new EntityModel { ColName = "UserId", DateType = "long", Describe = "用户Id" });
-            //dataSource.Add(new EntityModel { ColName = "UserHeadIoc", DateType = "string", Describe = "用户头像", Length = "128" });
-            //dataSource.Add(new EntityModel { ColName = "Money", DateType = "decimal", Describe = "金额", Length = "18,2" });
-            //dataSource.Add(new EntityModel { ColName = "LotteryTime", DateType = "DateTime", Describe = "开奖时间", IsNull = true });
-            //entityModelBindingSource.DataSource = dataSource;
+            List<EntityModel> dataSource = new List<EntityModel>();
+            dataSource.Add(new EntityModel { ColName = "UserId", DateType = "long", Describe = "用户Id" });
+            dataSource.Add(new EntityModel { ColName = "UserHeadIoc", DateType = "string", Describe = "用户头像", Length = "128" });
+            dataSource.Add(new EntityModel { ColName = "Money", DateType = "decimal", Describe = "金额", Length = "18,2" });
+            dataSource.Add(new EntityModel { ColName = "LotteryTime", DateType = "DateTime", Describe = "开奖时间", IsNull = true });
+            entityModelBindingSource.DataSource = dataSource;
             InitData();
         }
 
@@ -69,6 +69,7 @@ namespace PlatformCodeBuilder
             fileModel.TableName = textBox1.Text;
             fileModel.Description = textBox4.Text;
             fileModel.ClassPropertys = new List<ClassProperty>();
+            fileModel.FirstLowerName = FirstCharToLower(fileModel.Name);
 
             foreach (EntityModel model in dataSource)
             {
@@ -138,13 +139,12 @@ namespace PlatformCodeBuilder
                 3. 生成创建Entity的Dto
                 4. 生成EntityManager
             */
-
             var entityFolder = coreProject.ProjectItems.AddFolder(fileModel.Name + "s");
             fileModel.Namespace = $"{coreProject.Name}";
             fileModel.DirName = entityFolder.Name;
             fileModel.EntityNamespace = $"{coreProject.Name}.{entityFolder.Name}";
             string content = Engine.Razor.RunCompile("EntityTemplate", typeof(EntityFileModel), fileModel);
-            content = content.Replace("< /summary>", "</summary>");
+            content = content.Replace("&quot;", "\"");
             string fileName = fileModel.Name + ".cs";
             SolutionUnit.AddFileToProjectItem(entityFolder, content, fileName);
 
@@ -256,13 +256,20 @@ namespace PlatformCodeBuilder
 
             InitModelData();
 
-            CreateEntity();
+            try
+            {
+                CreateEntity();
 
-            if (chkApplication.Checked)
-                CreateEntityAppService();            
+                if (chkApplication.Checked)
+                    CreateEntityAppService();
 
-            MessageBox.Show("生成成功");
-            this.Close();
+                MessageBox.Show("生成成功");
+                this.Close();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         
         private EntityModel DeepCopy(EntityModel model)

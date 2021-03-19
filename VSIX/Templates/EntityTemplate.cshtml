@@ -32,14 +32,14 @@ namespace @(Model.Namespace).@(Model.DirName)
             @foreach (ClassProperty classProperty in Model.ClassPropertys)
             {
                 if (classProperty.PropertyType == "string" && !classProperty.IsNull)
-                {
-            <text>Check.NotNullOrEmpty(@classProperty.FirstLowerName, "@classProperty.CnName");</text>
+                {                   
+            @:Check.NotNullOrEmpty(@classProperty.FirstLowerName, "@classProperty.CnName");
                 }
             }
 
             @foreach (ClassProperty classProperty in Model.ClassPropertys)
             {
-            <text>@classProperty.Name = @classProperty.FirstLowerName;</text>
+            @:@classProperty.Name = @classProperty.FirstLowerName;
             }
             
             return true;
@@ -48,19 +48,20 @@ namespace @(Model.Namespace).@(Model.DirName)
         #region 表字段
         @foreach (ClassProperty classProperty in Model.ClassPropertys)
         {
-        <text>/// <summary></text>
-        <text>/// @Raw(@classProperty.CnName)</text>
-        <text>/// < /summary></text>
-        <text>[Description("@Raw(@classProperty.CnName)")]</text>
-            if (classProperty.ClassAttributes != null && classProperty.ClassAttributes.Count > 0)
+        @:/// <summary>
+        @:/// @classProperty.CnName
+        @:/// </summary>
+        @:[Description("@classProperty.CnName")]
+        @:@if (classProperty.ClassAttributes != null && classProperty.ClassAttributes.Count > 0)
+        {
+            @foreach (var classAttribute in classProperty.ClassAttributes)
             {
-                foreach (var classAttribute in classProperty.ClassAttributes)
-                {
-        <text>@Raw(@classAttribute.NameValue)</text>
-                }
+        @:@classAttribute.NameValue
             }
-        <text>public @classProperty.PropertyType @classProperty.Name { get; protected set; }</text>
         }
+        @:public @classProperty.PropertyType @classProperty.Name { get; protected set; }
+        }
+
         #endregion
     }
 }
