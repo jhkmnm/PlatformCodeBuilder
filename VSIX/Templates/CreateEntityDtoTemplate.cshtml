@@ -8,7 +8,7 @@ namespace @(Model.Namespace).@(Model.DirName)
     {
         @foreach (ClassProperty classProperty in Model.ClassPropertys)
         {
-        <text>public @classProperty.PropertyType @classProperty.Name { get; set; }</text>
+        @:public @classProperty.PropertyType @classProperty.Name { get; set; }
         }
     }
 }

@@ -36,28 +36,28 @@ namespace @(Model.Namespace).@(Model.DirName)
         {
             var query = BuildGetPaged@(Model.Name)(input);
 
-            return await ToPagedResult(query, input, input.Sorting);
+            return await ToPagedResult<@(Model.Name), GetPaged@(Model.Name)Output>(query, input, input.Sorting);
         }
 
-        protected virtual IQueryable<GetPaged@(Model.Name)Output> BuildGetPaged@(Model.Name)(GetPaged@(Model.Name)Input input)
+        protected virtual IQueryable<@(Model.Name)> BuildGetPaged@(Model.Name)(GetPaged@(Model.Name)Input input)
         {
             var query = _@(Model.FirstLowerName)Repository.GetAll().AsNoTracking()
             @foreach(ClassProperty classProperty in Model.ClassPropertys)
             {
                 if(classProperty.PropertyType == "string")
                 {
-                <text>.WhereIf(input.@(classProperty.Name).IsNotNullOrEmpty(), w => w.@(classProperty.Name) == input.@classProperty.Name)</text>
+                @:.WhereIf(input.@(classProperty.Name).IsNotNullOrEmpty(), w => w.@(classProperty.Name) == input.@classProperty.Name)
                 }
                 else if(classProperty.PropertyType.EndsWith("?"))
                 {
-                <text>.WhereIf(input.@(@classProperty.Name).HasValue, w => w.@classProperty.Name == input.@classProperty.Name)</text>
+                @:.WhereIf(input.@(@classProperty.Name).HasValue, w => w.@classProperty.Name == input.@classProperty.Name)
                 }
                 else
                 {
-                <text>.Where(w => w.@classProperty.Name == input.@classProperty.Name)</text>
+                @:.Where(w => w.@classProperty.Name == input.@classProperty.Name)
                 }
             }
-                .Select(s => ObjectMapper.Map<GetPaged@(Model.Name)Output>(s));
+                .Select(s => s);
             return query;
         }
     }

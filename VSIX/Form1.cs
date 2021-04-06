@@ -33,12 +33,12 @@ namespace PlatformCodeBuilder
 
             InitializeComponent();
 
-            List<EntityModel> dataSource = new List<EntityModel>();
-            dataSource.Add(new EntityModel { ColName = "UserId", DateType = "long", Describe = "用户Id" });
-            dataSource.Add(new EntityModel { ColName = "UserHeadIoc", DateType = "string", Describe = "用户头像", Length = "128" });
-            dataSource.Add(new EntityModel { ColName = "Money", DateType = "decimal", Describe = "金额", Length = "18,2" });
-            dataSource.Add(new EntityModel { ColName = "LotteryTime", DateType = "DateTime", Describe = "开奖时间", IsNull = true });
-            entityModelBindingSource.DataSource = dataSource;
+            //List<EntityModel> dataSource = new List<EntityModel>();
+            //dataSource.Add(new EntityModel { ColName = "UserId", DateType = "long", Describe = "用户Id" });
+            //dataSource.Add(new EntityModel { ColName = "UserHeadIoc", DateType = "string", Describe = "用户头像", Length = "128" });
+            //dataSource.Add(new EntityModel { ColName = "Money", DateType = "decimal", Describe = "金额", Length = "18,2" });
+            //dataSource.Add(new EntityModel { ColName = "LotteryTime", DateType = "DateTime", Describe = "开奖时间", IsNull = true });
+            //entityModelBindingSource.DataSource = dataSource;
             InitData();
         }
 
@@ -207,12 +207,12 @@ namespace PlatformCodeBuilder
             fileModel.Namespace += $".{fileModel.DirName}";
             fileModel.DirName = dtoFolder.Name;
             string content = Engine.Razor.RunCompile("GetPagedOutputTemplate", typeof(EntityFileModel), fileModel);
-            content = content.Replace("< /summary>", "</summary>");
+            //content = content.Replace("< /summary>", "</summary>");
             string fileName = $"GetPaged{fileModel.Name}Output.cs";
             SolutionUnit.AddFileToProjectItem(dtoFolder, content, fileName);
 
             content = Engine.Razor.RunCompile("GetPagedInputTemplate", typeof(EntityFileModel), fileModel);
-            content = content.Replace("< /summary>", "</summary>");
+            //content = content.Replace("< /summary>", "</summary>");
             fileName = $"GetPaged{fileModel.Name}Input.cs";
             SolutionUnit.AddFileToProjectItem(dtoFolder, content, fileName);
         }

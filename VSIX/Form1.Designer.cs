@@ -133,7 +133,7 @@ namespace PlatformCodeBuilder
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(48, 397);
+            this.textBox1.Location = new System.Drawing.Point(95, 397);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(228, 25);
             this.textBox1.TabIndex = 3;
@@ -141,7 +141,7 @@ namespace PlatformCodeBuilder
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(5, 392);
+            this.label1.Location = new System.Drawing.Point(52, 401);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(37, 15);
             this.label1.TabIndex = 5;
@@ -149,7 +149,7 @@ namespace PlatformCodeBuilder
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(364, 397);
+            this.textBox3.Location = new System.Drawing.Point(411, 397);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(191, 25);
             this.textBox3.TabIndex = 4;
@@ -157,7 +157,7 @@ namespace PlatformCodeBuilder
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(291, 401);
+            this.label2.Location = new System.Drawing.Point(338, 401);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(70, 15);
             this.label2.TabIndex = 8;
@@ -174,7 +174,7 @@ namespace PlatformCodeBuilder
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(684, 397);
+            this.textBox4.Location = new System.Drawing.Point(652, 397);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(266, 25);
             this.textBox4.TabIndex = 5;
