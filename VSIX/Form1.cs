@@ -80,6 +80,7 @@ namespace PlatformCodeBuilder
                     CnName = item.Describe,
                     IsNull = item.IsNull,
                     Name = item.ColName,
+                    Lenght = item.DateType == "string" ? Convert.ToInt32(item.Length) : 0,
                     PropertyType = item.DateType,
                     FirstLowerName = FirstCharToLower(item.ColName),
                     IsCreateOrEdit = item.IsCreateOrEdit,

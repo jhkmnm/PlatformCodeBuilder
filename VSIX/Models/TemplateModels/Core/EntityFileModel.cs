@@ -59,6 +59,8 @@ namespace PlatformCodeBuilder.Models.TemplateModels
         /// </summary>
         public string CnName { get; set; }
 
+        public int Lenght { get; set; }
+
         /// <summary>
         /// 首字母小写
         /// </summary>

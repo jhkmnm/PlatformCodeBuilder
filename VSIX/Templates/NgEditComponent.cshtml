@@ -25,7 +25,22 @@ export class Edit@(Model.Name)Component extends ModalComponentBase implements On
             {
                 if (classProperty.IsCreateOrEdit)
                 {
-            @:@(classProperty.FirstLowerName): { type: '@(classProperty.PropertyType.ToLower())', title: '@(classProperty.CnName)'
+                    if(classProperty.PropertyType == "string")
+                    {
+            @:@(classProperty.FirstLowerName): { type: '@(classProperty.PropertyType.ToLower())', title: '@(classProperty.CnName)', maxLenght: @(classProperty.Lenght) },
+                    }
+                    else if(classProperty.PropertyType == "bool")
+                    {
+            @:@(classProperty.FirstLowerName): { type: 'boolean', title: '@(classProperty.CnName)' },
+                    }
+                    else if(classProperty.PropertyType == "int")
+                    {
+            @:@(classProperty.FirstLowerName): { type: 'integer', title: '@(classProperty.CnName)' },
+                    }
+                    else if(classProperty.PropertyType == "decimal")
+                    {
+            @:@(classProperty.FirstLowerName): { type: 'number', title: '@(classProperty.CnName)' },
+                    }
                 }
             }
         }
