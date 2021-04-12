@@ -10,14 +10,17 @@ namespace @(Model.Namespace).@(Model.DirName)
     /// @(Model.Description)分页查询结果
     /// </summary>
     [AutoMapFrom(typeof(@(Model.Name)))]
-    public class GetPaged@(Model.Name)Output
+    public class @(Model.Name)ListOutput
     {
         @foreach (ClassProperty classProperty in Model.ClassPropertys)
         {
+            if(classProperty.IsShowInList)
+            {
         @:/// <summary>
         @:/// @Raw(@classProperty.CnName)
         @:/// </summary>
         @:public @classProperty.PropertyType @classProperty.Name { get; set; }
+            }        
         }
     }
 }

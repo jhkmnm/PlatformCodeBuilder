@@ -14,10 +14,13 @@ namespace @(Model.Namespace).@(Model.DirName)
     {
         @foreach (ClassProperty classProperty in Model.ClassPropertys)
         {
+            if(classProperty.IsFilter)
+            {
         @:/// <summary>
         @:/// @Raw(@classProperty.CnName)
         @:/// </summary>
         @:public @classProperty.PropertyType @classProperty.Name { get; set; }
+            }        
         }
 
         public void Normalize()

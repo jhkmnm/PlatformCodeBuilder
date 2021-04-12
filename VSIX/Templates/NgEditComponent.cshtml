@@ -1,0 +1,129 @@
+﻿@using PlatformCodeBuilder.Models.TemplateModels
+@inherits RazorEngine.Templating.TemplateBase<PlatformCodeBuilder.Models.TemplateModels.EntityFileModel>
+import { HttpClient, HttpHeaders } from '@@angular/common/http';
+import { Component, Injector, OnInit, ViewChild } from '@@angular/core';
+import { SFComponent, SFSchema, SFUISchema } from '@@delon/form';
+import { ModalComponentBase } from '@@shared/common/modal-component-base';
+import { CreateOrUpdate@(Model.Name)Dto, @(Model.Name)ServiceProxy } from '@@shared/service-proxies/service-proxies';
+import { finalize } from 'rxjs/operators';
+
+
+@@Component({
+  selector: 'app-@(Model.AngularEntityName)s-edit',
+  templateUrl: './edit.component.html'
+})
+/**
+ * @(Model.Description)
+ */
+export class Edit@(Model.Name)Component extends ModalComponentBase implements OnInit {
+    record: CreateOrUpdate@(Model.Name)Dto;
+    saving = false;
+
+    schema: SFSchema = {
+        properties: {
+            @foreach (ClassProperty classProperty in Model.ClassPropertys)
+            {
+                if (classProperty.IsCreateOrEdit)
+                {
+            @:@(classProperty.FirstLowerName): { type: '@(classProperty.PropertyType.ToLower())', title: '@(classProperty.CnName)'
+                }
+            }
+        }
+    }
+
+    @@ViewChild('st', { static: true }) st: STComponent;
+    columns: STColumn[] = [
+    { type: 'checkbox' },
+@foreach (ClassProperty classProperty in MOdel.ClassPropertys)
+{
+    if (classProperty.IsShowInList)
+    {
+        if (classProperty.PropertyType == "string")
+        {
+            @:{ title: @(classProperty.CnName), index: '@(classProperty.Name)' },
+        }
+        else if (classProperty.PropertyType == "DateTime")
+        {
+            @:{ title: @(classProperty.CnName), type: 'date', dateFormat: 'yyyy-MM-dd', index: '@(classProperty.Name)' },
+        }
+        else if (classProperty.PropertyType == "bool")
+        {
+            @:{ title: @(classProperty.CnName), type: 'yn', index: '@(classProperty.Name)' },
+        }
+    }
+}
+    { title: '操作',
+    buttons: [
+    {
+    text: '编辑',
+    icon: 'edit',
+    type: 'modal',
+    modal: {
+    component: Edit@(Model.Name)Component,
+    },
+    params: (record: STData) => {
+    return { record };
+    },
+    click: (record, modal) => {
+    if (modal == true) {
+    this.refresh();
+    }
+    },
+    },
+    {
+    text: '删除',
+    icon: 'close',
+    type: 'del',
+    popTitle: '确定删除该@(Model.Description)',
+    click: (record: STData, modal?: any, instance?: STComponent) => {
+    this.delete(record, modal, instance);
+    },
+    },
+    ],
+    },
+    ];
+
+    constructor(injector: Injector, private _@(Model.FirstLowerName)Service: @(Model.Name)ServiceProxy){
+    super(injector);
+    }
+
+    ngOnInit(){
+    super.ngOnInit();
+    }
+
+    protected list(request: PagedRequestDto, finishedCallback: () => void): void {
+    this._@(Model.FirstLowerName)Service
+    .getPaged(request.maxResultCount, request.skipCount)
+    .pipe(finalize(finishedCallback))
+    .subscribe((result) => {
+    this.dataList = result.items;
+    this.totalItems = result.totalCount;
+    });
+    }
+
+    create() {
+    this.modalHelper.createStatic(Create@(Model.Name)Component, { i: { id: 0 } }).subscribe((res) => {
+    if(res === true) {
+    this.refresh();
+    }
+    });
+    }
+
+    delete(record: STData, modal?: any, instance?: STComponent) {
+    this._@(Model.FirstLowerName)Service.delete(record.id).subscribe(() => {
+    this.msgSrv.success('删除@(Model.Description)成功');
+    this.refresh();
+    });
+    }
+
+    doSearch(val: any) {
+@foreach (ClassProperty classProperty in Model.ClassPropertys)
+{
+    if (classProperty.IsFilter)
+    {
+        @:this.@(classProperty.Name.ToLower()) = val@(classProperty.Name.ToLower());
+    }
+}
+    this.getDataPage(1);
+    }
+    }

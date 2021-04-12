@@ -1,0 +1,26 @@
+﻿<page-header [action]="phActionTpl"> </page-header>
+<nz-card>
+    <sf mode="search" [schema]="searchSchema" (formSubmit)="doSearch($event)" (formReset)="st.reset($event)"></sf>
+    <button nz-button [nzType]="'primary'" *ngIf="isGranted('权限')" (click)="create()">
+        <i nz-icon nzType="plus"></i>
+        <span>
+            {{ 'Create' | translate }}
+        </span>
+    </button>
+    <ng-container *ngIf="selectedDataItems.length > 0">
+        <button nz-button [nzType]="'danger'" *ngIf="isGranted('权限')" (click)="batchDelete()">
+            <i nz-icon nzType="delete"></i>
+            <span>
+                {{ 'DeleteSelected' | translate }}
+            </span>
+        </button>
+    </ng-container>
+    <st #st
+        [data]="dataList"
+        [columns]="columns"
+        [pi]="pageIndex"
+        [ps]="pageSize"
+        [total]="totalItems"
+        (change)="change($event)"
+        [page]="{ front: false, showSize: true, showQuickJumper: true }"></st>
+</nz-card>

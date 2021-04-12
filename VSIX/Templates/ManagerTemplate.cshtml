@@ -23,17 +23,51 @@ namespace @(Model.Namespace).@(Model.DirName)
         }
 
         /// <summary>
+        /// 根据ID获取@(Model.Description)
+        /// </summary>
+        public virtual async Task<@(Model.Name)> Get@(Model.Name)ByIdAsync(Guid id)
+        {
+            var entity = await _@(Model.FirstLowerName)Repository.GetAll().AsNoTracking()
+                .FirstOrDefault(w => w.Id == id);
+            return entity;
+        }
+
+        /// <summary>
         /// 创建@(Model.Description)
         /// </summary>
         /// <param name="createDto"></param>
         /// <returns></returns>
-        public virtual async Task<Guid> CreateAsync(Create@(Model.Name)Dto createDto)
+        public virtual async Task<Guid> CreateAsync(CreateOrUpdate@(Model.Name)Dto createDto)
         {
             var id = _guidGenerator.Create();
             var entity = new @(Model.Name)(id, @(Model.CreateParameters));
 
             await _@(Model.FirstLowerName)Repository.InsertAsync(entity);
             return id;
+        }
+
+        /// <summary>
+        /// 更新@(Model.Description)
+        /// </summary>
+        /// <param name="createDto"></param>
+        /// <returns></returns>
+        public virtual async Task<Guid> UpdateAsync(CreateOrUpdate@(Model.Name)Dto updateDto)
+        {            
+            var entity = _@(Model.FirstLowerName)Repository.GetAsync(updateDto.Id);
+            entity = ObjectMapper.Map<@(Model.Name)>(updateDto);
+
+            await _@(Model.FirstLowerName)Repository.UpdateAsync(entity);
+            return id;
+        }
+
+        /// <summary>
+        /// 删除@(Model.Description)
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public virtual async Task DeleteAsync(@(Model.Name) entity)
+        {
+            await _@(Model.FirstLowerName)Repository.DeleteAsync(entity);
         }
     }
 }

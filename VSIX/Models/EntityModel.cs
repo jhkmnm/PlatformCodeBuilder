@@ -47,5 +47,25 @@ namespace PlatformCodeBuilder.Models
         /// 描述
         /// </summary>
         public string Describe { get; set; }
+
+        /// <summary>
+        /// 查询过滤字段
+        /// </summary>
+        public bool IsFilter { get; set; }
+
+        /// <summary>
+        /// 查询列表字段
+        /// </summary>
+        public bool IsShowInList { get; set; }
+
+        /// <summary>
+        /// 是否编辑页面字段
+        /// </summary>
+        public bool IsCreateOrEdit { get; set; }
+
+        /// <summary>
+        /// 是否必填字段
+        /// </summary>
+        public bool IsRequired { get; set; }
     }
 }

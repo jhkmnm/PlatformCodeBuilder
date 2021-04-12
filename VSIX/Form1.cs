@@ -66,6 +66,7 @@ namespace PlatformCodeBuilder
             var dataSource = entityModelBindingSource.List;
 
             fileModel.Name = textBox3.Text;
+            fileModel.AngularEntityName = fileModel.Name.ToLower();
             fileModel.TableName = textBox1.Text;
             fileModel.Description = textBox4.Text;
             fileModel.ClassPropertys = new List<ClassProperty>();
@@ -81,6 +82,10 @@ namespace PlatformCodeBuilder
                     Name = item.ColName,
                     PropertyType = item.DateType,
                     FirstLowerName = FirstCharToLower(item.ColName),
+                    IsCreateOrEdit = item.IsCreateOrEdit,
+                    IsFilter = item.IsFilter,
+                    IsRequired = item.IsRequired,
+                    IsShowInList = item.IsShowInList,
                     ClassAttributes = new List<ClassProperty.ClassAttribute>()
                 };
                 fileModel.ClassPropertys.Add(property);

@@ -11,6 +11,8 @@ namespace PlatformCodeBuilder.Models.TemplateModels
         public string Namespace { get; set; }
 
         public string Name { get; set; }
+        
+        public string AngularEntityName { get; set; }
 
         public string FirstLowerName { get; set; }
 
@@ -66,6 +68,26 @@ namespace PlatformCodeBuilder.Models.TemplateModels
         /// 是否允许为空
         /// </summary>
         public bool IsNull { get; set; }
+
+        /// <summary>
+        /// 查询过滤字段
+        /// </summary>
+        public bool IsFilter { get; set; }
+
+        /// <summary>
+        /// 查询列表字段
+        /// </summary>
+        public bool IsShowInList { get; set; }
+
+        /// <summary>
+        /// 是否编辑页面字段
+        /// </summary>
+        public bool IsCreateOrEdit { get; set; }
+
+        /// <summary>
+        /// 是否必填字段
+        /// </summary>
+        public bool IsRequired { get; set; }
 
         /// <summary>
         /// 属性特性

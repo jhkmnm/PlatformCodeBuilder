@@ -83,6 +83,10 @@
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
+    <EmbeddedResource Include="Templates\NgEditComponent.cshtml" />
+    <EmbeddedResource Include="Templates\NgListComponent.cshtml" />
+    <EmbeddedResource Include="Templates\NgEditComponentHtml.cshtml" />
+    <EmbeddedResource Include="Templates\NgListComponentHtml.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />

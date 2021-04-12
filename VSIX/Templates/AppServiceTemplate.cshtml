@@ -13,6 +13,9 @@ using @(Model.Namespace).@(Model.DirName).Dtos;
 
 namespace @(Model.Namespace).@(Model.DirName)
 {
+    /// <summary>
+    /// @(Model.Description)
+    /// </summary>
     public class @(Model.Name)AppService : AppServiceBase
     {
         private readonly IRepository<@(Model.Name), Guid> _@(Model.FirstLowerName)Repository;
@@ -27,38 +30,92 @@ namespace @(Model.Namespace).@(Model.DirName)
             _@(Model.FirstLowerName)Manager = @(Model.FirstLowerName)Manager;
         }
 
-        public async Task<Guid> Create@(Model.Name)Async(Create@(Model.Name)Dto input)
-        {
-            return await _@(Model.FirstLowerName)Manager.CreateAsync(input);
-        }
-
-        public async Task<PagedResultDto<GetPaged@(Model.Name)Output>> GetPaged@(Model.Name)Async(GetPaged@(Model.Name)Input input)
+        public async Task<PagedResultDto<@(Model.Name)ListOutput>> GetPagedAsync(GetPaged@(Model.Name)Input input)
         {
             var query = BuildGetPaged@(Model.Name)(input);
 
-            return await ToPagedResult<@(Model.Name), GetPaged@(Model.Name)Output>(query, input, input.Sorting);
+            return await ToPagedResult<@(Model.Name), @(Model.Name)ListOutput>(query, input, input.Sorting);
         }
+
+        /// <summary>
+        /// 查询单个@(Model.Description)用于编辑
+        /// </summary>
+        // [AbpAuthorize("权限点")]
+        public async Task<Get@(Model.Name)ForEditOutput> GetForEdit(Guid id)
+        {
+            var entity = await _@(Model.FirstLowerName)Manager.Get@(Model.Name)ByIdAsync(input.Id);
+            var editDto = ObjectMapper.Map<Get@(Model.Name)ForEditOutput>(entity);
+            return editDto;
+        }
+
+        /// <summary>
+        /// 添加或更新@(Model.Description)
+        /// </summary>
+        // [AbpAuthorize("权限点")]
+        public asyn Task CreateOrUpdate@(Model.Name)Async(CreateOrUpdate@(Model.Name)Dto input)
+        {
+            if(input.Id.HasValue)
+                await Update@(Model.Name)Async(input);
+            else
+                await Create@(Model.Name)Async(input);
+        }
+
+        /// <summary>
+        /// 删除指定@(Model.Description)
+        /// </summary>
+        // [AbpAuthorize("权限点")]
+        public async Task Delete(EntityDto input)
+        {
+            var entity = await _@(Model.FirstLowerName)Manager.Get@(Model.Name)ByIdAsync(input.Id);
+            CheckErrors(await _@(Model.FirstLowerName)Manager.DeleteAsync(entity));
+        }
+
+        /// <summary>
+        /// 批量删除@(Model.Description)
+        /// </summary>
+        // [AbpAuthorize("权限点")]
+        public async Task BatchDeleteAsync(List<Guid> ids)
+        {
+            foreach (var id in ids)
+            {
+                var entity = await _@(Model.FirstLowerName)Manager.Get@(Model.Name)ByIdAsync(input.Id);
+                CheckErrors(await _@(Model.FirstLowerName)Manager.DeleteAsync(entity));
+            }
+        }        
 
         protected virtual IQueryable<@(Model.Name)> BuildGetPaged@(Model.Name)(GetPaged@(Model.Name)Input input)
         {
             var query = _@(Model.FirstLowerName)Repository.GetAll().AsNoTracking()
             @foreach(ClassProperty classProperty in Model.ClassPropertys)
             {
-                if(classProperty.PropertyType == "string")
+                if(classProperty.IsFilter)
                 {
+                    if(classProperty.PropertyType == "string")
+                    {
                 @:.WhereIf(input.@(classProperty.Name).IsNotNullOrEmpty(), w => w.@(classProperty.Name) == input.@classProperty.Name)
-                }
-                else if(classProperty.PropertyType.EndsWith("?"))
-                {
+                    }
+                    else if(classProperty.PropertyType.EndsWith("?"))
+                    {
                 @:.WhereIf(input.@(@classProperty.Name).HasValue, w => w.@classProperty.Name == input.@classProperty.Name)
-                }
-                else
-                {
+                    }
+                    else
+                    {
                 @:.Where(w => w.@classProperty.Name == input.@classProperty.Name)
+                    }
                 }
             }
                 .Select(s => s);
             return query;
+        }
+        
+        private async Task Create@(Model.Name)Async(CreateOrUpdate@(Model.Name)Dto input)
+        {
+            await _@(Model.FirstLowerName)Manager.CreateAsync(input);
+        }
+
+        private async Task Update@(Model.Name)Async(CreateOrUpdate@(Model.Name)Dto input)
+        {
+            await _@(Model.FirstLowerName)Manager.UpdateAsync(input);
         }
     }
 }

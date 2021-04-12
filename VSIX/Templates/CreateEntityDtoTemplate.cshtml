@@ -8,7 +8,10 @@ namespace @(Model.Namespace).@(Model.DirName)
     {
         @foreach (ClassProperty classProperty in Model.ClassPropertys)
         {
+            if (classProperty.IsCreateOrEdit)
+            {
         @:public @classProperty.PropertyType @classProperty.Name { get; set; }
+            }        
         }
     }
 }
