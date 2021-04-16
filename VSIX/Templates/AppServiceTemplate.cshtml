@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using FlyFish.Extensions;
 using @(Model.EntityNamespace);
 using @(Model.EntityNamespace).Dtos;
 using @(Model.Namespace).@(Model.DirName).Dtos;
@@ -43,7 +45,7 @@ namespace @(Model.Namespace).@(Model.DirName)
         // [AbpAuthorize("权限点")]
         public async Task<Get@(Model.Name)ForEditOutput> GetForEdit(Guid id)
         {
-            var entity = await _@(Model.FirstLowerName)Manager.Get@(Model.Name)ByIdAsync(input.Id);
+            var entity = await _@(Model.FirstLowerName)Manager.Get@(Model.Name)ByIdAsync(id);
             var editDto = ObjectMapper.Map<Get@(Model.Name)ForEditOutput>(entity);
             return editDto;
         }
@@ -52,7 +54,7 @@ namespace @(Model.Namespace).@(Model.DirName)
         /// 添加或更新@(Model.Description)
         /// </summary>
         // [AbpAuthorize("权限点")]
-        public asyn Task CreateOrUpdate@(Model.Name)Async(CreateOrUpdate@(Model.Name)Dto input)
+        public async Task CreateOrUpdate@(Model.Name)Async(CreateOrUpdate@(Model.Name)Dto input)
         {
             if(input.Id.HasValue)
                 await Update@(Model.Name)Async(input);
@@ -63,11 +65,11 @@ namespace @(Model.Namespace).@(Model.DirName)
         /// <summary>
         /// 删除指定@(Model.Description)
         /// </summary>
+        /// <param name="id"></param>
         // [AbpAuthorize("权限点")]
-        public async Task Delete(EntityDto input)
+        public async Task Delete(Guid id)
         {
-            var entity = await _@(Model.FirstLowerName)Manager.Get@(Model.Name)ByIdAsync(input.Id);
-            CheckErrors(await _@(Model.FirstLowerName)Manager.DeleteAsync(entity));
+            await _@(Model.FirstLowerName)Manager.DeleteAsync(id);
         }
 
         /// <summary>
@@ -78,8 +80,7 @@ namespace @(Model.Namespace).@(Model.DirName)
         {
             foreach (var id in ids)
             {
-                var entity = await _@(Model.FirstLowerName)Manager.Get@(Model.Name)ByIdAsync(input.Id);
-                CheckErrors(await _@(Model.FirstLowerName)Manager.DeleteAsync(entity));
+                await _@(Model.FirstLowerName)Manager.DeleteAsync(id);
             }
         }        
 

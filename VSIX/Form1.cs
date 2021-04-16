@@ -33,12 +33,16 @@ namespace PlatformCodeBuilder
 
             InitializeComponent();
 
-            //List<EntityModel> dataSource = new List<EntityModel>();
-            //dataSource.Add(new EntityModel { ColName = "UserId", DateType = "long", Describe = "用户Id" });
-            //dataSource.Add(new EntityModel { ColName = "UserHeadIoc", DateType = "string", Describe = "用户头像", Length = "128" });
-            //dataSource.Add(new EntityModel { ColName = "Money", DateType = "decimal", Describe = "金额", Length = "18,2" });
-            //dataSource.Add(new EntityModel { ColName = "LotteryTime", DateType = "DateTime", Describe = "开奖时间", IsNull = true });
-            //entityModelBindingSource.DataSource = dataSource;
+            List<EntityModel> dataSource = new List<EntityModel>();
+            dataSource.Add(new EntityModel { ColName = "Code", DateType = "string", Describe = "仓库编码", Length = "16", IsFilter = true, IsShowInList = true, IsCreateOrEdit = true, IsRequired = true });
+            dataSource.Add(new EntityModel { ColName = "Name", DateType = "string", Describe = "仓库名称", Length = "128", IsFilter = true, IsShowInList = true, IsCreateOrEdit = true, IsRequired = true });
+            dataSource.Add(new EntityModel { ColName = "Address", DateType = "string", Describe = "地址", Length = "1024", IsFilter = true, IsShowInList = true, IsCreateOrEdit = true, IsRequired = true });
+            dataSource.Add(new EntityModel { ColName = "Size", DateType = "string", Describe = "仓库大小", Length = "16", IsFilter = true, IsShowInList = true, IsCreateOrEdit = true, IsRequired = true });
+            dataSource.Add(new EntityModel { ColName = "Remark", DateType = "string", Describe = "备注", Length = "2048", IsShowInList = true, IsCreateOrEdit = true });
+            txtOutPath.Text = "E:\\NuGet";
+
+            entityModelBindingSource.DataSource = dataSource;
+
             InitData();
         }
 
@@ -108,7 +112,7 @@ namespace PlatformCodeBuilder
                     if (!item.IsNull)
                         property.ClassAttributes.Add(new ClassProperty.ClassAttribute
                         {
-                            NameValue = "[NotNull]"
+                            NameValue = "[Required]"
                         });
                 }
                 else
@@ -200,26 +204,32 @@ namespace PlatformCodeBuilder
             string fileName = $"{fileModel.Name}AppService.cs";
             SolutionUnit.AddFileToProjectItem(appServiceFolder, content, fileName);
 
-            CreateEntityPageDto(appServiceFolder);
+            CreateServiceDto(appServiceFolder);            
         }
 
         /// <summary>
-        /// 生成Entity分页查询Dto
+        /// 生成Service下的Dto
         /// </summary>
         /// <param name="serviceFolder"></param>
-        private void CreateEntityPageDto(ProjectItem serviceFolder)
+        private void CreateServiceDto(ProjectItem serviceFolder)
         {
             var dtoFolder = serviceFolder.ProjectItems.AddFolder("Dtos");
             fileModel.Namespace += $".{fileModel.DirName}";
             fileModel.DirName = dtoFolder.Name;
-            string content = Engine.Razor.RunCompile("GetPagedOutputTemplate", typeof(EntityFileModel), fileModel);
-            //content = content.Replace("< /summary>", "</summary>");
-            string fileName = $"GetPaged{fileModel.Name}Output.cs";
+
+            // 分页查询输入
+            string content = Engine.Razor.RunCompile("GetPagedInputTemplate", typeof(EntityFileModel), fileModel);
+            string fileName = $"GetPaged{fileModel.Name}Input.cs";
             SolutionUnit.AddFileToProjectItem(dtoFolder, content, fileName);
 
-            content = Engine.Razor.RunCompile("GetPagedInputTemplate", typeof(EntityFileModel), fileModel);
-            //content = content.Replace("< /summary>", "</summary>");
-            fileName = $"GetPaged{fileModel.Name}Input.cs";
+            // 分页结果
+            content = Engine.Razor.RunCompile("GetPagedOutputTemplate", typeof(EntityFileModel), fileModel);
+            fileName = $"GetPaged{fileModel.Name}Output.cs";
+            SolutionUnit.AddFileToProjectItem(dtoFolder, content, fileName);
+
+            // 单条编辑返回结果
+            content = Engine.Razor.RunCompile("GetForEditOutputTemplate", typeof(EntityFileModel), fileModel);
+            fileName = $"Get{fileModel.Name}ForEditOutput.cs";
             SolutionUnit.AddFileToProjectItem(dtoFolder, content, fileName);
         }
 
@@ -248,6 +258,57 @@ namespace PlatformCodeBuilder
             }
         }        
 
+        /// <summary>
+        /// 生成Angular列表页
+        /// </summary>
+        private void CreateAngularListComponent()
+        {
+            var outPath = txtOutPath.Text;
+            string tsContent = Engine.Razor.RunCompile("NgListComponent", typeof(EntityFileModel), fileModel);            
+            string htmlContent = Engine.Razor.RunCompile("NgListComponentHtml", typeof(EntityFileModel), fileModel);            
+
+            if (!string.IsNullOrEmpty(outPath))
+            {
+                string folder = Path.Combine(outPath, $"{fileModel.AngularEntityName}s");
+                if(!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+
+                string tsFilePath = Path.Combine(folder, $"{fileModel.AngularEntityName}.component.ts");
+                string htmlFilePath = Path.Combine(folder, $"{fileModel.AngularEntityName}.component.html");
+
+                File.WriteAllText(tsFilePath, tsContent);
+                File.WriteAllText(htmlFilePath, htmlContent);
+            }
+        }
+
+        /// <summary>
+        /// 生成Angular编辑页面
+        /// </summary>
+        private void CreateAngularEditComponent()
+        {
+            var outPath = txtOutPath.Text;
+            string tsContent = Engine.Razor.RunCompile("NgEditComponent", typeof(EntityFileModel), fileModel);
+            string htmlContent = Engine.Razor.RunCompile("NgEditComponentHtml", typeof(EntityFileModel), fileModel);
+            string eidtDirName = "create-or-update";
+
+            if (!string.IsNullOrEmpty(outPath))
+            {
+                string folder = Path.Combine(outPath, $"{fileModel.AngularEntityName}s", eidtDirName);
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+
+                string tsFilePath = Path.Combine(folder, $"{fileModel.AngularEntityName}.createorupdate.component.ts");
+                string htmlFilePath = Path.Combine(folder, $"{fileModel.AngularEntityName}.createorupdate.component.html");
+
+                File.WriteAllText(tsFilePath, tsContent);
+                File.WriteAllText(htmlFilePath, htmlContent);
+            }
+        }
+
         private string FirstCharToLower(string input)
         {
             if (String.IsNullOrEmpty(input))
@@ -264,10 +325,24 @@ namespace PlatformCodeBuilder
 
             try
             {
-                CreateEntity();
+                if(chkBuildService.Checked)
+                {
+                    CreateEntity();
 
-                if (chkApplication.Checked)
-                    CreateEntityAppService();
+                    if (chkApplication.Checked)
+                        CreateEntityAppService();
+                }
+
+                if(chkBuildAngular.Checked)
+                {
+                    if (string.IsNullOrEmpty(txtOutPath.Text))
+                        MessageBox.Show("请指定输入目录");
+                    else
+                    {
+                        CreateAngularListComponent();
+                        CreateAngularEditComponent();
+                    }
+                }
 
                 MessageBox.Show("生成成功");
                 this.Close();
@@ -290,6 +365,39 @@ namespace PlatformCodeBuilder
                 stream.Close();
             }
             return (EntityModel)clone;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            dialog.Description = "请选择项目根路径";
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                txtOutPath.Text = dialog.SelectedPath;
+            }
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var current = (EntityModel)entityModelBindingSource.Current;
+            //txtColName.Text = 
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            var list = new List<EntityModel>();
+            dataGridView1.DataSource = list;
+
+            var source = (List<EntityModel>)entityModelBindingSource.DataSource;
+            source.Add(new EntityModel());
+            dataGridView1.DataSource = entityModelBindingSource;
+            entityModelBindingSource.Position = entityModelBindingSource.Count - 1;
+            //dataGridView1.Rows[dataGridView1.Rows.Count - 1].Selected = true;
+        }
+
+        private void btnDel_Click(object sender, EventArgs e)
+        {
+            entityModelBindingSource.RemoveCurrent();
         }
     }
 }

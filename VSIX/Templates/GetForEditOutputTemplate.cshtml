@@ -1,0 +1,27 @@
+﻿@using PlatformCodeBuilder.Models.TemplateModels
+@inherits RazorEngine.Templating.TemplateBase<PlatformCodeBuilder.Models.TemplateModels.EntityFileModel>
+using System;
+using Abp.AutoMapper;
+using @(Model.EntityNamespace);
+
+namespace @(Model.Namespace).@(Model.DirName)
+{
+    /// <summary>
+    /// @(Model.Description)单个信息
+    /// </summary>
+    [AutoMapFrom(typeof(@(Model.Name)))]
+    public class Get@(Model.Name)ForEditOutput
+    {
+        public Guid Id{ get; set;}
+@foreach (ClassProperty classProperty in Model.ClassPropertys)
+{
+    if (classProperty.IsCreateOrEdit)
+    {
+        @:/// <summary>
+        @:/// @Raw(@classProperty.CnName)
+        @:/// </summary>
+        @:public @classProperty.PropertyType @classProperty.Name { get; set; }
+    }
+}
+    }
+}

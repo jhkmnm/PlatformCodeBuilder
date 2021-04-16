@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using Abp;
 using Abp.Domain.Repositories;
+using Microsoft.EntityFrameworkCore;
 using @(Model.EntityNamespace).Dtos;
 
 namespace @(Model.Namespace).@(Model.DirName)
@@ -28,7 +29,7 @@ namespace @(Model.Namespace).@(Model.DirName)
         public virtual async Task<@(Model.Name)> Get@(Model.Name)ByIdAsync(Guid id)
         {
             var entity = await _@(Model.FirstLowerName)Repository.GetAll().AsNoTracking()
-                .FirstOrDefault(w => w.Id == id);
+                .FirstOrDefaultAsync(w => w.Id == id);
             return entity;
         }
 
@@ -49,25 +50,25 @@ namespace @(Model.Namespace).@(Model.DirName)
         /// <summary>
         /// 更新@(Model.Description)
         /// </summary>
-        /// <param name="createDto"></param>
+        /// <param name="updateDto"></param>
         /// <returns></returns>
         public virtual async Task<Guid> UpdateAsync(CreateOrUpdate@(Model.Name)Dto updateDto)
         {            
-            var entity = _@(Model.FirstLowerName)Repository.GetAsync(updateDto.Id);
+            var entity = await _@(Model.FirstLowerName)Repository.GetAsync(updateDto.Id.Value);
             entity = ObjectMapper.Map<@(Model.Name)>(updateDto);
 
             await _@(Model.FirstLowerName)Repository.UpdateAsync(entity);
-            return id;
+            return entity.Id;
         }
 
         /// <summary>
         /// 删除@(Model.Description)
         /// </summary>
-        /// <param name="entity"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public virtual async Task DeleteAsync(@(Model.Name) entity)
+        public virtual async Task DeleteAsync(Guid id)
         {
-            await _@(Model.FirstLowerName)Repository.DeleteAsync(entity);
+            await _@(Model.FirstLowerName)Repository.DeleteAsync(id);
         }
     }
 }

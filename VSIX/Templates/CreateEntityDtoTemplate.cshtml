@@ -4,8 +4,10 @@ using System;
 
 namespace @(Model.Namespace).@(Model.DirName)
 {
-    public class Create@(Model.Name)Dto
+    public class CreateOrUpdate@(Model.Name)Dto
     {
+        public Guid? Id { get; set; }
+
         @foreach (ClassProperty classProperty in Model.ClassPropertys)
         {
             if (classProperty.IsCreateOrEdit)

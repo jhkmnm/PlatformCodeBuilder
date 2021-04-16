@@ -18,9 +18,9 @@
     <st #st
         [data]="dataList"
         [columns]="columns"
-        [pi]="pageIndex"
-        [ps]="pageSize"
-        [total]="totalItems"
+        [pi]="pageingInfo.pageNumber"
+        [ps]="pageingInfo.pageSize"
+        [total]="pageingInfo.totalItems"
         (change)="change($event)"
         [page]="{ front: false, showSize: true, showQuickJumper: true }"></st>
 </nz-card>
