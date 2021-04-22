@@ -15,7 +15,6 @@ import { finalize } from 'rxjs/operators';
  * @(Model.Description)
  */
 export class CreateOrUpdate@(Model.Name)Component extends ModalComponentBase implements OnInit {
-    @Input() id: number | null;
     record: CreateOrUpdate@(Model.Name)Dto;
     saving = false;
 
@@ -77,11 +76,12 @@ export class CreateOrUpdate@(Model.Name)Component extends ModalComponentBase imp
     }
 
     ngOnInit(): void {
-        this.record = new CreateOrUpdate@(Model.Name)Dto();
-        if(this.id){
-            this._@(Model.FirstLowerName)Service.getForEdit(this.id).subscribe((res) => {
+        if(this.record){
+            this._@(Model.FirstLowerName)Service.getForEdit(this.record.id).subscribe((res) => {
                 this.record = res;
             });
+        } else {
+            this.record = new CreateOrUpdate@(Model.Name)Dto();
         }
     }
 
@@ -94,7 +94,7 @@ export class CreateOrUpdate@(Model.Name)Component extends ModalComponentBase imp
             .pipe(finalize(() => {
                 this.saving = false;
             }))
-            .subscribe((res) = > {
+            .subscribe((res) => {
                 this.msgSrv.success("保存成功");
                 this.success();
             });

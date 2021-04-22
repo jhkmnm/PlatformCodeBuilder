@@ -38,7 +38,7 @@ namespace @(Model.Namespace).@(Model.DirName)
         /// </summary>
         /// <param name="createDto"></param>
         /// <returns></returns>
-        public virtual async Task<Guid> CreateAsync(CreateOrUpdate@(Model.Name)Dto createDto)
+        public virtual async Task<Guid> CreateAsync(CreateOrUpdate@(Model.Name)Dto dto)
         {
             var id = _guidGenerator.Create();
             var entity = new @(Model.Name)(id, @(Model.CreateParameters));
@@ -52,12 +52,13 @@ namespace @(Model.Namespace).@(Model.DirName)
         /// </summary>
         /// <param name="updateDto"></param>
         /// <returns></returns>
-        public virtual async Task<Guid> UpdateAsync(CreateOrUpdate@(Model.Name)Dto updateDto)
+        public virtual async Task<Guid> UpdateAsync(CreateOrUpdate@(Model.Name)Dto dto)
         {            
-            var entity = await _@(Model.FirstLowerName)Repository.GetAsync(updateDto.Id.Value);
-            entity = ObjectMapper.Map<@(Model.Name)>(updateDto);
+            var entity = await _@(Model.FirstLowerName)Repository.GetAsync(dto.Id.Value);
+            var isChanged = entity.SetProperties(@(Model.CreateParameters));
+            if(isChanged)
+                await _@(Model.FirstLowerName)Repository.UpdateAsync(entity);
 
-            await _@(Model.FirstLowerName)Repository.UpdateAsync(entity);
             return entity.Id;
         }
 

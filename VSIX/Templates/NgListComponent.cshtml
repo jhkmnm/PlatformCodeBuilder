@@ -75,6 +75,7 @@ export class @(Model.Name)Component extends PagedListingComponentBase<@(Model.Na
                     text: '编辑',
                     icon: 'edit',
                     type: 'modal',
+                    acl: { ability: ['权限'] },
                     modal: {
                         component: CreateOrUpdate@(Model.Name)Component,
                     },
@@ -91,6 +92,7 @@ export class @(Model.Name)Component extends PagedListingComponentBase<@(Model.Na
                     text: '删除',
                     icon: 'close',
                     type: 'del',
+                    acl: { ability: ['权限'] },
                     popTitle: '确定删除该@(Model.Description)',
                     click: (record: STData, modal?: any, instance?: STComponent) => {
                         this.delete(record, modal, instance);
@@ -110,11 +112,19 @@ export class @(Model.Name)Component extends PagedListingComponentBase<@(Model.Na
 
     protected list(request: PagedRequestDto): Observable<PagedResultDto> {
         return this._@(Model.FirstLowerName)Service
-            .getPaged(request.maxResultCount, request.skipCount);
+            .getPaged(
+            @foreach (ClassProperty classProperty in Model.ClassPropertys)
+            {
+                if (classProperty.IsFilter)
+                {
+                @:this.searchInput.@(classProperty.FirstLowerName),
+                    }
+            }
+                request.sorting, request.maxResultCount, request.skipCount);
     }
 
     create() {
-        this.modalHelper.createStatic(CreateOrUpdate@(Model.Name)Component, { i: { id: 0 } }).subscribe((res) => {
+        this.modalHelper.createStatic(CreateOrUpdate@(Model.Name)Component, { record: null }).subscribe((res) => {
             if(res === true) {
                 this.refresh();
             }
@@ -133,7 +143,7 @@ export class @(Model.Name)Component extends PagedListingComponentBase<@(Model.Na
     {
         if (classProperty.IsFilter)
         {
-        @:this.@(classProperty.FirstLowerName) = val.@(classProperty.FirstLowerName);
+        @:this.searchInput.@(classProperty.FirstLowerName) = val.@(classProperty.FirstLowerName);
         }
     }
         this.getDataPage(1);

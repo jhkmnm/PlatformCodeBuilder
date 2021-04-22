@@ -135,7 +135,7 @@ namespace PlatformCodeBuilder
 
             fileModel.Parameters = string.Join(", ", fileModel.ClassPropertys.OrderBy(o => o.PropertyType).Select(s => $"{s.PropertyType} {s.FirstLowerName}"));
             fileModel.MethodParameters = string.Join(", ", fileModel.ClassPropertys.OrderBy(o => o.PropertyType).Select(s => s.FirstLowerName));
-            fileModel.CreateParameters = string.Join(", ", fileModel.ClassPropertys.OrderBy(o => o.PropertyType).Select(s => $"createDto.{s.Name}"));
+            fileModel.CreateParameters = string.Join(", ", fileModel.ClassPropertys.OrderBy(o => o.PropertyType).Select(s => $"dto.{s.Name}"));
         }
 
         /// <summary>
@@ -176,8 +176,8 @@ namespace PlatformCodeBuilder
             fileModel.Namespace += $".{entityFolder.Name}";
             fileModel.DirName = dtoFolder.Name;
             string content = Engine.Razor.RunCompile("CreateEntityDtoTemplate", typeof(EntityFileModel), fileModel);
-            content = content.Replace("< /summary>", "</summary>");
-            string fileName = $"Create{fileModel.Name}Dto.cs";
+            // content = content.Replace("< /summary>", "</summary>");
+            string fileName = $"CreateOrUpdate{fileModel.Name}Dto.cs";
             SolutionUnit.AddFileToProjectItem(dtoFolder, content, fileName);
         }
 

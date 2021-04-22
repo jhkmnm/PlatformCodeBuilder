@@ -1,9 +1,11 @@
 ﻿@using PlatformCodeBuilder.Models.TemplateModels
 @inherits RazorEngine.Templating.TemplateBase<PlatformCodeBuilder.Models.TemplateModels.EntityFileModel>
 using System;
+using Abp.AutoMapper;
 
 namespace @(Model.Namespace).@(Model.DirName)
 {
+    [AutoMapTo(typeof(@(Model.Name)))]
     public class CreateOrUpdate@(Model.Name)Dto
     {
         public Guid? Id { get; set; }

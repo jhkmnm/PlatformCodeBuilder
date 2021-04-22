@@ -12,6 +12,8 @@ namespace @(Model.Namespace).@(Model.DirName)
     [AutoMapFrom(typeof(@(Model.Name)))]
     public class @(Model.Name)ListOutput
     {
+        public Guid Id { get; set; }
+
         @foreach (ClassProperty classProperty in Model.ClassPropertys)
         {
             if(classProperty.IsShowInList)

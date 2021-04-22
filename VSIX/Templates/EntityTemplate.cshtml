@@ -4,9 +4,9 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
 using Abp;
 using Abp.Auditing;
+using Abp.Domain.Entities;
 using Abp.Domain.Entities.Auditing;
 
 namespace @(Model.Namespace).@(Model.DirName)
@@ -16,7 +16,7 @@ namespace @(Model.Namespace).@(Model.DirName)
     /// </summary>
     [Audited]
     [Table("@(Model.TableName)")]
-    public class @(Model.Name) : FullAuditedAggregateRoot<Guid>
+    public class @(Model.Name) : FullAuditedAggregateRoot<Guid>, IMustHaveTenant
     {
         private @(Model.Name)()
         {
@@ -24,10 +24,11 @@ namespace @(Model.Namespace).@(Model.DirName)
 
         public @(Model.Name)(Guid id, @(Model.Parameters))
         {
-            SetProperties(id, @(Model.MethodParameters));
+            Id = id;
+            SetProperties(@(Model.MethodParameters));
         }
 
-        private bool SetProperties(Guid id, @(Model.Parameters))
+        public bool SetProperties(@(Model.Parameters))
         {
             @foreach (ClassProperty classProperty in Model.ClassPropertys)
             {
@@ -46,6 +47,8 @@ namespace @(Model.Namespace).@(Model.DirName)
         }
 
         #region 表字段
+        public int TenantId { get; set; }
+
         @foreach (ClassProperty classProperty in Model.ClassPropertys)
         {
         @:/// <summary>
