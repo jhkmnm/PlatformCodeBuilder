@@ -1,8 +1,8 @@
 ﻿@using PlatformCodeBuilder.Models.TemplateModels
 @inherits RazorEngine.Templating.TemplateBase<PlatformCodeBuilder.Models.TemplateModels.EntityFileModel>
 <div class="modal-header">    
-    <div *ngIf="!id" class="modal-title">创建@(Model.Description) </div>
-    <div *ngIf="id" class="modal-title">编辑@(Model.Description) {{ record.id }}</div>
+    <div *ngIf="!record.id" class="modal-title">创建@(Model.Description) </div>
+    <div *ngIf="record.id" class="modal-title">编辑@(Model.Description)</div>
 </div>
 <nz-spin *ngIf="!record" class="modal-spin"></nz-spin>
 <sf *ngIf="record" #sf mode="edit" [schema]="schema" [ui]="ui" [formData]="record" button="none">

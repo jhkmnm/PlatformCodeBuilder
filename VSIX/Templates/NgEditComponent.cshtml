@@ -3,7 +3,11 @@
 import { Component, Injector, OnInit, Input, ViewChild } from '@@angular/core';
 import { SFComponent, SFSchema, SFUISchema } from '@@delon/form';
 import { ModalComponentBase } from '@@shared/common/modal-component-base';
-import { CreateOrUpdate@(Model.Name)Dto, @(Model.Name)ServiceProxy } from '@@shared/service-proxies/service-proxies';
+import { 
+    CreateOrUpdate@(Model.Name)Dto, 
+    @(Model.Name)ServiceProxy,
+    Get@(Model.Name)ForEditOutput
+} from '@@shared/service-proxies/service-proxies';
 import { finalize } from 'rxjs/operators';
 
 
@@ -14,8 +18,9 @@ import { finalize } from 'rxjs/operators';
 /**
  * @(Model.Description)
  */
-export class CreateOrUpdate@(Model.Name)Component extends ModalComponentBase implements OnInit {
-    record: CreateOrUpdate@(Model.Name)Dto;
+export class Edit@(Model.Name)Component extends ModalComponentBase implements OnInit {
+    @@ViewChild('sf', { static: false }) sf: SFComponent;
+    record: Get@(Model.Name)ForEditOutput;
     saving = false;
 
     schema: SFSchema = {
@@ -38,7 +43,7 @@ export class CreateOrUpdate@(Model.Name)Component extends ModalComponentBase imp
         }
         else if (classProperty.PropertyType == "string")
         {
-            @:@(classProperty.FirstLowerName): { type: 'string', title: '@(classProperty.CnName)', maxLenght: @(classProperty.Lenght) },
+            @:@(classProperty.FirstLowerName): { type: 'string', title: '@(classProperty.CnName)', maxLength: @(classProperty.Lenght) },
         }
         else if (classProperty.PropertyType == "DateTime")
         {
@@ -81,7 +86,7 @@ export class CreateOrUpdate@(Model.Name)Component extends ModalComponentBase imp
                 this.record = res;
             });
         } else {
-            this.record = new CreateOrUpdate@(Model.Name)Dto();
+            this.record = new Get@(Model.Name)ForEditOutput();
         }
     }
 

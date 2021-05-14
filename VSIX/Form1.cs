@@ -159,6 +159,7 @@ namespace PlatformCodeBuilder
             SolutionUnit.AddFileToProjectItem(entityFolder, content, fileName);
 
             SetDbSetToDbContext($"{fileModel.Namespace}.{fileModel.DirName}", fileModel.Name);
+            SetPermissionName(fileModel.Name, fileModel.Description);
 
             if (chkManager.Checked)
                 CreateEntityManager(entityFolder);
@@ -177,7 +178,7 @@ namespace PlatformCodeBuilder
             fileModel.DirName = dtoFolder.Name;
             string content = Engine.Razor.RunCompile("CreateEntityDtoTemplate", typeof(EntityFileModel), fileModel);
             // content = content.Replace("< /summary>", "</summary>");
-            string fileName = $"CreateOrUpdate{fileModel.Name}Dto.cs";
+            string fileName = $"{fileModel.Name}EditDto.cs";
             SolutionUnit.AddFileToProjectItem(dtoFolder, content, fileName);
         }
 
@@ -256,8 +257,34 @@ namespace PlatformCodeBuilder
 
                 customDbContextProviderProjectItem.Save();
             }
-        }        
+        }
 
+        /// <summary>
+        /// 增加权限名称
+        /// </summary>
+        private void SetPermissionName(string entityName, string description)
+        {
+            Project coreProject = solutionProjectItems.Find(t => t.Name.EndsWith(".Core")).SubProject;
+            ProjectItem permissionNamesProjectItem = _dte.Solution.FindProjectItem(coreProject.FileName.Substring(0, coreProject.FileName.LastIndexOf("\\")) + "\\Authorization\\WmsPermissionNames.cs");
+            if (permissionNamesProjectItem != null)
+            {
+                CodeClass codeClass = SolutionUnit.GetClass(permissionNamesProjectItem.FileCodeModel.CodeElements);
+                var codeChilds = codeClass.Collection;
+                foreach (CodeElement codeChild in codeChilds)
+                {
+                    var insertCode = codeChild.GetEndPoint(vsCMPart.vsCMPartBody).CreateEditPoint();
+                    var code = $"        #region {description}\r\n"+
+                               $"        public const string Pages_{entityName}s = \"Pages.{entityName}s\";\r\n"+
+                               $"        public const string Pages_{entityName}s_Edit = \"Pages.{entityName}s.Edit\";\r\n"+
+                               $"        public const string Pages_{entityName}s_Delete = \"Pages.{entityName}s.Delete\";\r\n"+
+                               "        #endregion\r\n";
+                    insertCode.Insert(code);
+                }
+
+                permissionNamesProjectItem.Save();
+            }
+        }
+        
         /// <summary>
         /// 生成Angular列表页
         /// </summary>
@@ -389,10 +416,9 @@ namespace PlatformCodeBuilder
             dataGridView1.DataSource = list;
 
             var source = (List<EntityModel>)entityModelBindingSource.DataSource;
-            source.Add(new EntityModel());
+            source.Add(new EntityModel(){ DateType = "string" });
             dataGridView1.DataSource = entityModelBindingSource;
             entityModelBindingSource.Position = entityModelBindingSource.Count - 1;
-            //dataGridView1.Rows[dataGridView1.Rows.Count - 1].Selected = true;
         }
 
         private void btnDel_Click(object sender, EventArgs e)

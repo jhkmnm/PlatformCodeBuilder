@@ -2,12 +2,12 @@
 @inherits RazorEngine.Templating.TemplateBase<PlatformCodeBuilder.Models.TemplateModels.EntityFileModel>
 import { Component, Injector, OnInit, ViewChild } from '@@angular/core';
 import { STColumn, STComponent, STData } from '@@delon/abc/st';
-import { SFSchema } from '@@delon/form';
-import { @(Model.Name)ServiceProxy, @(Model.Name)ListOutput } from '@@shared/service-proxies/service-proxies';
+import { SFSchema, SFUISchema } from '@@delon/form';
+import { @(Model.Name)ServiceProxy, @(Model.Name)PagedOutput } from '@@shared/service-proxies/service-proxies';
 import { PagedListingComponentBase, PagedRequestDto, PagedResultDto } from '@@shared/common/paged-listing-component-base';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { CreateOrUpdate@(Model.Name)Component } from './create-or-update/@(Model.AngularEntityName).createorupdate.component';
+import { Edit@(Model.Name)Component } from './create-or-update/@(Model.AngularEntityName).createorupdate.component';
 
 
 @@Component({
@@ -17,7 +17,7 @@ import { CreateOrUpdate@(Model.Name)Component } from './create-or-update/@(Model
 /**
  * @(Model.Description)
  */
-export class @(Model.Name)Component extends PagedListingComponentBase<@(Model.Name)ListOutput> implements OnInit {
+export class @(Model.Name)Component extends PagedListingComponentBase<@(Model.Name)PagedOutput> implements OnInit {
     // 查询
     searchSchema: SFSchema = {
         properties: {
@@ -25,18 +25,35 @@ export class @(Model.Name)Component extends PagedListingComponentBase<@(Model.Na
         {
             if (classProperty.IsFilter)
             {
-                if(classProperty.PropertyType == "decimal")
+                if (classProperty.PropertyType == "enum")
                 {
-            @:@(classProperty.FirstLowerName): { type: 'number', title: '@(classProperty.CnName)' },
+            @:@(classProperty.FirstLowerName): { type: 'string', title: '', enum: this.enum },
                 }
                 else
                 {
-            @:@(classProperty.FirstLowerName): { type: '@(classProperty.PropertyType.ToLower())', title: '@(classProperty.CnName)' },
-                }            
+            @:@(classProperty.FirstLowerName): { type: '@(classProperty.PropertyType.ToLower())', title: '' },
+                }
             }
         }
         },
     };
+
+    ui: SFUISchema = {
+    @foreach (ClassProperty classProperty in Model.ClassPropertys)
+    {
+        if (classProperty.IsFilter)
+        {
+            if (classProperty.PropertyType == "enum")
+            {
+        @:$@(classProperty.FirstLowerName): { placeholder: '-请选择@(classProperty.CnName)-' },
+            }
+            else
+            {
+        @:$@(classProperty.FirstLowerName): { placeholder: '@(classProperty.CnName)' },
+            }
+        }
+    }
+    }
 
     searchInput: any = {
     @foreach (ClassProperty classProperty in Model.ClassPropertys)
@@ -72,12 +89,12 @@ export class @(Model.Name)Component extends PagedListingComponentBase<@(Model.Na
         { title: '操作',
             buttons: [
                 {
-                    text: '编辑',
                     icon: 'edit',
                     type: 'modal',
-                    acl: { ability: ['权限'] },
+                    tooltip: '编辑',
+                    acl: { ability: ['Pages.@(Model.Name)s.Edit'] },
                     modal: {
-                        component: CreateOrUpdate@(Model.Name)Component,
+                        component: Edit@(Model.Name)Component,
                     },
                     params: (record: STData) => {
                         return { record };
@@ -89,10 +106,10 @@ export class @(Model.Name)Component extends PagedListingComponentBase<@(Model.Na
                     },
                 },
                 {
-                    text: '删除',
-                    icon: 'close',
+                    icon: 'delete',
                     type: 'del',
-                    acl: { ability: ['权限'] },
+                    tooltip: '删除',
+                    acl: { ability: ['Pages.@(Model.Name)s.Delete'] },
                     popTitle: '确定删除该@(Model.Description)',
                     click: (record: STData, modal?: any, instance?: STComponent) => {
                         this.delete(record, modal, instance);
@@ -124,7 +141,7 @@ export class @(Model.Name)Component extends PagedListingComponentBase<@(Model.Na
     }
 
     create() {
-        this.modalHelper.createStatic(CreateOrUpdate@(Model.Name)Component, { record: null }).subscribe((res) => {
+        this.modalHelper.createStatic(Edit@(Model.Name)Component, { record: null }).subscribe((res) => {
             if(res === true) {
                 this.refresh();
             }
@@ -135,6 +152,38 @@ export class @(Model.Name)Component extends PagedListingComponentBase<@(Model.Na
         this._@(Model.FirstLowerName)Service.delete(record.id).subscribe(() => {
             this.msgSrv.success('删除@(Model.Description)成功');
             this.refresh();
+        });
+    }
+
+    batchDelete() {
+        const selectCount = this.selectedDataItems.length;
+        if (selectCount <= 0) {
+            this.msgSrv.warning(this.l('PleaseSelectAtLeastOneItem'));
+            return;
+        }
+
+        let ids = this.getMappingValueArrayOfkey(this.selectedDataItems, 'id');
+        this.pageingInfo.isTableLoading = true;
+        this.modalSrv.confirm({
+            nzContent: this.l('ConfirmDeleteXItemsWarningMessage', selectCount, this.selectedDataItems.length),
+            nzOkText: this.l('Yes'),
+            nzCancelText: this.l('No'),
+            nzOnOk: () => {
+                this._@(Model.FirstLowerName)Service
+                    .batchDelete(ids)
+                    .pipe(
+                        finalize(() => {
+                            this.pageingInfo.isTableLoading = false;
+                        })
+                    )
+                    .subscribe(() => {
+                        this.msgSrv.success(this.l('SuccessfullyMoved'));
+                        this.getDataPage(1);
+                    });
+            },
+            nzOnCancel: () => {
+                this.pageingInfo.isTableLoading = false;
+            },
         });
     }
 

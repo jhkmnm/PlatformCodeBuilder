@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using FlyFish.Extensions;
 using Swashbuckle.AspNetCore.Annotations;
+using Kfy.Wms.Core.Authorization;
 using @(Model.EntityNamespace);
 using @(Model.EntityNamespace).Dtos;
 using @(Model.Namespace).@(Model.DirName).Dtos;
@@ -39,19 +40,19 @@ namespace @(Model.Namespace).@(Model.DirName)
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        [AbpAuthorize("权限点")]
+        [AbpAuthorize(WmsPermissionNames.Pages_@(Model.Name)s)]
         [SwaggerOperation(Summary = "分页列表", Tags = new[] { "@(Model.Description)" })]
-        public async Task<PagedResultDto<@(Model.Name)ListOutput>> GetPagedAsync(GetPaged@(Model.Name)Input input)
+        public async Task<PagedResultDto<@(Model.Name)PagedOutput>> GetPagedAsync(GetPaged@(Model.Name)Input input)
         {
             var query = BuildGetPaged@(Model.Name)(input);
 
-            return await ToPagedResult<@(Model.Name), @(Model.Name)ListOutput>(query, input, input.Sorting);
+            return await ToPagedResult<@(Model.Name), @(Model.Name)PagedOutput>(query, input, input.Sorting);
         }
 
         /// <summary>
         /// 查询单个@(Model.Description)用于编辑
         /// </summary>
-        // [AbpAuthorize("权限点")]
+        [AbpAuthorize(WmsPermissionNames.Pages_@(Model.Name)s_Edit)]
         [SwaggerOperation(Summary = "查询单个", Tags = new[] { "@(Model.Description)" })]
         public async Task<Get@(Model.Name)ForEditOutput> GetForEdit(Guid id)
         {
@@ -63,9 +64,9 @@ namespace @(Model.Namespace).@(Model.DirName)
         /// <summary>
         /// 添加或更新@(Model.Description)
         /// </summary>
-        // [AbpAuthorize("权限点")]
+        [AbpAuthorize(WmsPermissionNames.Pages_@(Model.Name)s_Edit)]
         [SwaggerOperation(Summary = "添加或更新", Tags = new[] { "@(Model.Description)" })]
-        public async Task CreateOrUpdateAsync(CreateOrUpdate@(Model.Name)Dto input)
+        public async Task CreateOrUpdateAsync(@(Model.Name)EditDto input)
         {
             if(input.Id.HasValue)
                 await Update@(Model.Name)Async(input);
@@ -77,7 +78,7 @@ namespace @(Model.Namespace).@(Model.DirName)
         /// 删除指定@(Model.Description)
         /// </summary>
         /// <param name="id"></param>
-        // [AbpAuthorize("权限点")]
+        [AbpAuthorize(WmsPermissionNames.Pages_@(Model.Name)s_Delete)]
         [SwaggerOperation(Summary = "删除", Tags = new[] { "@(Model.Description)" })]
         public async Task Delete(Guid id)
         {
@@ -87,9 +88,9 @@ namespace @(Model.Namespace).@(Model.DirName)
         /// <summary>
         /// 批量删除@(Model.Description)
         /// </summary>
-        // [AbpAuthorize("权限点")]
+        [AbpAuthorize(WmsPermissionNames.Pages_@(Model.Name)s_Delete)]
         [SwaggerOperation(Summary = "批量删除", Tags = new[] { "@(Model.Description)" })]
-        public async Task BatchDeleteAsync(List<Guid> ids)
+        public async Task BatchDeleteAsync(IEnumerable<Guid> ids)
         {
             foreach (var id in ids)
             {
@@ -122,12 +123,12 @@ namespace @(Model.Namespace).@(Model.DirName)
             return query;
         }
         
-        private async Task Create@(Model.Name)Async(CreateOrUpdate@(Model.Name)Dto input)
+        private async Task Create@(Model.Name)Async(@(Model.Name)EditDto input)
         {
             await _@(Model.FirstLowerName)Manager.CreateAsync(input);
         }
 
-        private async Task Update@(Model.Name)Async(CreateOrUpdate@(Model.Name)Dto input)
+        private async Task Update@(Model.Name)Async(@(Model.Name)EditDto input)
         {
             await _@(Model.FirstLowerName)Manager.UpdateAsync(input);
         }

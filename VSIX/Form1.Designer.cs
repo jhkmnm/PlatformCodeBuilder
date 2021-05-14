@@ -425,10 +425,12 @@ namespace PlatformCodeBuilder
             this.ddlType.FormattingEnabled = true;
             this.ddlType.Items.AddRange(new object[] {
             "string",
+            "Guid",
             "long",
             "int",
             "decimal",
             "bool",
+            "enum",
             "DateTime"});
             this.ddlType.Location = new System.Drawing.Point(365, 318);
             this.ddlType.Name = "ddlType";
