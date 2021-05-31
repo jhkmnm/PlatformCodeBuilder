@@ -2,7 +2,7 @@
 @inherits RazorEngine.Templating.TemplateBase<PlatformCodeBuilder.Models.TemplateModels.EntityFileModel>
 <page-header> </page-header>
 <nz-card>
-    <sf mode="search" [schema]="searchSchema" (formSubmit)="doSearch($event)" (formReset)="st.reset($event)"></sf>
+    <sf mode="search" [schema]="searchSchema" [ui]="ui" (formSubmit)="doSearch($event)" (formReset)="st.reset($event)"></sf>
     <div style="margin-bottom: 9px;">
         <button nz-button [nzType]="'primary'" *ngIf="isGranted('Pages.@(Model.Name)s.Edit')" (click)="create()">
             <span>

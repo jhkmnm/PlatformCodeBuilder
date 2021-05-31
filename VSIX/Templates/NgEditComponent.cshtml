@@ -2,17 +2,17 @@
 @inherits RazorEngine.Templating.TemplateBase<PlatformCodeBuilder.Models.TemplateModels.EntityFileModel>
 import { Component, Injector, OnInit, Input, ViewChild } from '@@angular/core';
 import { SFComponent, SFSchema, SFUISchema } from '@@delon/form';
-import { ModalComponentBase } from '@@shared/common/modal-component-base';
+import { ModalComponentBase } from '@@sharedCommon/modal-component-base';
 import { 
-    CreateOrUpdate@(Model.Name)Dto, 
+    @(Model.Name)EditDto, 
     @(Model.Name)ServiceProxy,
     Get@(Model.Name)ForEditOutput
-} from '@@shared/service-proxies/service-proxies';
+} from '@@sharedServiceProxy/service-proxies';
 import { finalize } from 'rxjs/operators';
 
 
 @@Component({
-  selector: 'app-@(Model.AngularEntityName)s-createOrupdate',
+  selector: 'app-@(Model.AngularEntityName)s-createorupdate',
   templateUrl: './@(Model.AngularEntityName).createorupdate.component.html'
 })
 /**
@@ -90,8 +90,8 @@ export class Edit@(Model.Name)Component extends ModalComponentBase implements On
         }
     }
 
-    save(value: any){
-        const input = CreateOrUpdate@(Model.Name)Dto.fromJS(value);
+    save(value: any): void {
+        const input = @(Model.Name)EditDto.fromJS(value);
 
         this.saving = true;
         this._@(Model.FirstLowerName)Service
@@ -105,7 +105,7 @@ export class Edit@(Model.Name)Component extends ModalComponentBase implements On
             });
     }
 
-    close() {
+    close(): void {
         super.close();
     }
 }
