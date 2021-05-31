@@ -1,0 +1,29 @@
+﻿@using PlatformCodeBuilder.Models.TemplateModels
+@inherits RazorEngine.Templating.TemplateBase<PlatformCodeBuilder.Models.TemplateModels.EnumEntity>
+using System.ComponentModel;
+
+namespace @(Model.NameSpace)
+{
+    /// <summary>
+    /// @Model.EnumDes
+    /// </summary>
+    public enum @(Model.EnumName)
+    {
+    @foreach (EnumValue classProperty in Model.Values)
+    {
+        @:/// <summary>
+        @:/// 
+        @:/// </summary>
+        @:[Description("")]
+    if(classProperty.Value.HasValue)
+    {
+        @:@classProperty.EnumValueName = @classProperty.Value,
+
+    }
+    else
+    {
+        @:@classProperty.EnumValueName,
+    }    
+    }
+    }
+}

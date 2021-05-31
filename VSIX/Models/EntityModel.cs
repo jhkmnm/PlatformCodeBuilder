@@ -22,6 +22,16 @@ namespace PlatformCodeBuilder.Models
         public string ManageNamespace { get; set; }
         public ProjectItem CreateDirProject { get; set; }
         public List<EntityModel> EntityModels { get; set; }
+        /// <summary>
+        /// 是否有子表
+        /// </summary>
+        public bool HasDetail { get; set; }
+        /// <summary>
+        /// 子表实体名称
+        /// </summary>
+        public string DetailEntityName { get; set; }
+        public bool HasParent { get; set; }
+        public string ParentEntityName { get; set; }
     }
 
     [Serializable]
@@ -67,5 +77,13 @@ namespace PlatformCodeBuilder.Models
         /// 是否必填字段
         /// </summary>
         public bool IsRequired { get; set; }
+        /// <summary>
+        /// 枚举名称
+        /// </summary>
+        public string EnumName { get; set; }
+        /// <summary>
+        /// 枚举值  A, B, C:10
+        /// </summary>
+        public string EnumValue { get; set; }
     }
 }

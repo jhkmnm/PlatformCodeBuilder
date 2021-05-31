@@ -89,6 +89,7 @@
     <EmbeddedResource Include="Templates\NgEditComponentHtml.cshtml" />
     <EmbeddedResource Include="Templates\NgListComponentHtml.cshtml" />
     <EmbeddedResource Include="Templates\GetForEditOutputTemplate.cshtml" />
+    <EmbeddedResource Include="Templates\EnumTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />

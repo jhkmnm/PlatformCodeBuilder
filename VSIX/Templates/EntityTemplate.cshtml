@@ -45,9 +45,73 @@ namespace @(Model.Namespace).@(Model.DirName)
             
             return true;
         }
+        
+        @if(Model.HasDetail)
+        {
+        @:public void AddUpdateDeleteItems(List<@(Model.DetailEntityName)EditDto> editDtos)
+        @:{
+            @:var dbIds = OrderItems.Select(s => s.Id).ToList();
+            
+            // 传入参数与数据库记录 交集 => 集合A
+            @:var instersects = editDtos.Select(s => s.Id)
+                @:.Intersect(dbIds)
+                @:.ToList();
+            @:
+            // 数据库记录 与 集合A => 集合B
+            @:var excepts = dbIds.Except(instersects).ToList();
+            @:
+            // 删除集合B
+            @:RemoveItems(excepts);
+            @:
+            // 剩余的全部是新增或修改
+            @:foreach (var editDto in editDtos)
+            @:{
+                @:AddOrUpdateItems(editDto);
+            @:}
+        @:}
+        @:
+        @:/// <summary>
+        @:/// 删除指定明细
+        @:/// </summary>
+        @:/// <param name="itemIds"></param>
+        @:private void RemoveItems(IReadOnlyCollection<long> itemIds)
+        @:{
+            @:if(null == itemIds || itemIds.Count == 0) return;
+
+            @:foreach (var itemId in itemIds)
+            @:{
+                @:var items = OrderItems
+                    @:.Where(w => w.Id == itemId)
+                    @:.ToList();
+                @:items.ForEach(f => OrderItems.Remove(f));
+            @:}
+        @:}
+        @:
+        @:private void AddOrUpdateItems(@(Model.DetailEntityName)EditDto editDto)
+        @:{
+            @:Check.NotNull(editDto, nameof(editDto));
+            @:var item = OrderItems.FirstOrDefault(w => editDto.Id != 0 && w.Id == editDto.Id);
+
+            @:if (null == item)
+            @:{
+                @:item = new @(Model.DetailEntityName)(Id);
+                @:OrderItems.Add(item);
+            @:}
+            @:else
+            @:{
+                @:item.SetProperties(Id);
+            @:}
+        @:}
+        }
 
         #region 表字段
         public int TenantId { get; set; }
+
+        @if (Model.HasParent)
+        {
+        @:[ForeignKey("@(Model.ParentEntityName)Id")]
+        @:public virtual @(Model.ParentEntityName) @(Model.ParentEntityName) { get; protected set; }
+        }
 
         @foreach (ClassProperty classProperty in Model.ClassPropertys)
         {
@@ -57,7 +121,7 @@ namespace @(Model.Namespace).@(Model.DirName)
         @:[Description("@classProperty.CnName")]
         @:@if (classProperty.ClassAttributes != null && classProperty.ClassAttributes.Count > 0)
         {
-            @foreach (var classAttribute in classProperty.ClassAttributes)
+                @foreach (var classAttribute in classProperty.ClassAttributes)
             {
         @:@classAttribute.NameValue
             }

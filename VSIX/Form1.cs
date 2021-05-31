@@ -22,6 +22,7 @@ namespace PlatformCodeBuilder
         private static List<ProjectItem> solutionProjectItems;
 
         private static EntityFileModel fileModel;
+        private static List<EnumEntity> enumEntities;
         private Project coreProject;
         private Project applicationProject;
 
@@ -75,6 +76,12 @@ namespace PlatformCodeBuilder
             fileModel.Description = textBox4.Text;
             fileModel.ClassPropertys = new List<ClassProperty>();
             fileModel.FirstLowerName = FirstCharToLower(fileModel.Name);
+            fileModel.HasDetail = chkHasDetail.Checked;
+            fileModel.DetailEntityName = txtDetail.Text;
+            fileModel.HasParent = chkHasParent.Checked;
+            fileModel.ParentEntityName = txtParent.Text;
+
+            enumEntities = new List<EnumEntity>();
 
             foreach (EntityModel model in dataSource)
             {
@@ -90,7 +97,7 @@ namespace PlatformCodeBuilder
                     IsCreateOrEdit = item.IsCreateOrEdit,
                     IsFilter = item.IsFilter,
                     IsRequired = item.IsRequired,
-                    IsShowInList = item.IsShowInList,
+                    IsShowInList = item.IsShowInList,                    
                     ClassAttributes = new List<ClassProperty.ClassAttribute>()
                 };
                 fileModel.ClassPropertys.Add(property);
@@ -125,6 +132,34 @@ namespace PlatformCodeBuilder
                             {
                                 NameValue = $"[Column(TypeName = \"decimal({item.Length})\")]"
                             });
+                        }
+                    }
+
+                    if (item.DateType == "enum")
+                    {
+                        property.PropertyType = item.EnumName;
+
+                        var enumEntity = new EnumEntity
+                        {
+                            EnumName = item.EnumName,
+                            EnumDes = item.Describe,
+                            NameSpace = fileModel.Namespace + fileModel.DirName,
+                            Values = new List<EnumValue>()
+                        };
+
+                        enumEntities.Add(enumEntity);
+                        var values = item.EnumValue.Split(',');
+                        foreach(var value in values)
+                        {
+                            if(value.Contains(":"))
+                            {
+                                var names = value.Split(':');
+                                enumEntity.Values.Add(new Models.TemplateModels.EnumValue { EnumValueName = names[0], Value = Convert.ToInt32(names[1]) });
+                            }
+                            else
+                            {
+                                enumEntity.Values.Add(new Models.TemplateModels.EnumValue { EnumValueName = value });
+                            }
                         }
                     }
 
@@ -165,6 +200,27 @@ namespace PlatformCodeBuilder
                 CreateEntityManager(entityFolder);
 
             CreateCreateEntityDto(entityFolder);
+
+            if(enumEntities != null && enumEntities.Count > 0)
+            {
+                foreach(var item in enumEntities)
+                {
+                    CreateEnum(entityFolder, item);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 生成枚举文件
+        /// </summary>
+        /// <param name="entityFolder"></param>
+        /// <param name="enumEntity"></param>
+        private void CreateEnum(ProjectItem entityFolder, EnumEntity enumEntity)
+        {
+            enumEntity.NameSpace = fileModel.EntityNamespace;
+            string content = Engine.Razor.RunCompile("EnumTemplate", typeof(EnumEntity), enumEntity);
+            string fileName = $"{enumEntity.EnumName}.cs";
+            SolutionUnit.AddFileToProjectItem(entityFolder, content, fileName);
         }
 
         /// <summary>

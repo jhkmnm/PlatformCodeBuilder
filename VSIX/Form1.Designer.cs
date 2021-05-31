@@ -36,6 +36,8 @@ namespace PlatformCodeBuilder
             this.lengthDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.isNullDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.describeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.EnumName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.EnumValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.isFilterDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.isShowInListDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.isCreateOrEditDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -43,6 +45,12 @@ namespace PlatformCodeBuilder
             this.entityModelBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label9 = new System.Windows.Forms.Label();
+            this.txtDetail = new System.Windows.Forms.TextBox();
+            this.chkHasDetail = new System.Windows.Forms.CheckBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.txtParent = new System.Windows.Forms.TextBox();
+            this.chkHasParent = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.button1 = new System.Windows.Forms.Button();
             this.txtOutPath = new System.Windows.Forms.TextBox();
@@ -59,6 +67,10 @@ namespace PlatformCodeBuilder
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label11 = new System.Windows.Forms.Label();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             this.btnDel = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.ddlType = new System.Windows.Forms.ComboBox();
@@ -95,6 +107,8 @@ namespace PlatformCodeBuilder
             this.lengthDataGridViewTextBoxColumn,
             this.isNullDataGridViewCheckBoxColumn,
             this.describeDataGridViewTextBoxColumn,
+            this.EnumName,
+            this.EnumValue,
             this.isFilterDataGridViewCheckBoxColumn,
             this.isShowInListDataGridViewCheckBoxColumn,
             this.isCreateOrEditDataGridViewCheckBoxColumn,
@@ -106,7 +120,7 @@ namespace PlatformCodeBuilder
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersWidth = 25;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(943, 294);
+            this.dataGridView1.Size = new System.Drawing.Size(981, 294);
             this.dataGridView1.TabIndex = 1;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 
@@ -117,7 +131,7 @@ namespace PlatformCodeBuilder
             this.colNameDataGridViewTextBoxColumn.MinimumWidth = 6;
             this.colNameDataGridViewTextBoxColumn.Name = "colNameDataGridViewTextBoxColumn";
             this.colNameDataGridViewTextBoxColumn.ReadOnly = true;
-            this.colNameDataGridViewTextBoxColumn.Width = 125;
+            this.colNameDataGridViewTextBoxColumn.Width = 150;
             // 
             // dateTypeDataGridViewTextBoxColumn
             // 
@@ -155,41 +169,59 @@ namespace PlatformCodeBuilder
             this.describeDataGridViewTextBoxColumn.ReadOnly = true;
             this.describeDataGridViewTextBoxColumn.Width = 125;
             // 
+            // EnumName
+            // 
+            this.EnumName.DataPropertyName = "EnumName";
+            this.EnumName.HeaderText = "枚举名称";
+            this.EnumName.MinimumWidth = 6;
+            this.EnumName.Name = "EnumName";
+            this.EnumName.ReadOnly = true;
+            this.EnumName.Width = 125;
+            // 
+            // EnumValue
+            // 
+            this.EnumValue.DataPropertyName = "EnumValue";
+            this.EnumValue.HeaderText = "枚举值";
+            this.EnumValue.MinimumWidth = 6;
+            this.EnumValue.Name = "EnumValue";
+            this.EnumValue.ReadOnly = true;
+            this.EnumValue.Width = 125;
+            // 
             // isFilterDataGridViewCheckBoxColumn
             // 
             this.isFilterDataGridViewCheckBoxColumn.DataPropertyName = "IsFilter";
-            this.isFilterDataGridViewCheckBoxColumn.HeaderText = "是否筛选";
+            this.isFilterDataGridViewCheckBoxColumn.HeaderText = "筛选";
             this.isFilterDataGridViewCheckBoxColumn.MinimumWidth = 6;
             this.isFilterDataGridViewCheckBoxColumn.Name = "isFilterDataGridViewCheckBoxColumn";
             this.isFilterDataGridViewCheckBoxColumn.ReadOnly = true;
-            this.isFilterDataGridViewCheckBoxColumn.Width = 125;
+            this.isFilterDataGridViewCheckBoxColumn.Width = 80;
             // 
             // isShowInListDataGridViewCheckBoxColumn
             // 
             this.isShowInListDataGridViewCheckBoxColumn.DataPropertyName = "IsShowInList";
-            this.isShowInListDataGridViewCheckBoxColumn.HeaderText = "是否列表";
+            this.isShowInListDataGridViewCheckBoxColumn.HeaderText = "列表";
             this.isShowInListDataGridViewCheckBoxColumn.MinimumWidth = 6;
             this.isShowInListDataGridViewCheckBoxColumn.Name = "isShowInListDataGridViewCheckBoxColumn";
             this.isShowInListDataGridViewCheckBoxColumn.ReadOnly = true;
-            this.isShowInListDataGridViewCheckBoxColumn.Width = 125;
+            this.isShowInListDataGridViewCheckBoxColumn.Width = 80;
             // 
             // isCreateOrEditDataGridViewCheckBoxColumn
             // 
             this.isCreateOrEditDataGridViewCheckBoxColumn.DataPropertyName = "IsCreateOrEdit";
-            this.isCreateOrEditDataGridViewCheckBoxColumn.HeaderText = "是否编辑";
+            this.isCreateOrEditDataGridViewCheckBoxColumn.HeaderText = "编辑";
             this.isCreateOrEditDataGridViewCheckBoxColumn.MinimumWidth = 6;
             this.isCreateOrEditDataGridViewCheckBoxColumn.Name = "isCreateOrEditDataGridViewCheckBoxColumn";
             this.isCreateOrEditDataGridViewCheckBoxColumn.ReadOnly = true;
-            this.isCreateOrEditDataGridViewCheckBoxColumn.Width = 125;
+            this.isCreateOrEditDataGridViewCheckBoxColumn.Width = 80;
             // 
             // isRequiredDataGridViewCheckBoxColumn
             // 
             this.isRequiredDataGridViewCheckBoxColumn.DataPropertyName = "IsRequired";
-            this.isRequiredDataGridViewCheckBoxColumn.HeaderText = "是否必填";
+            this.isRequiredDataGridViewCheckBoxColumn.HeaderText = "必填";
             this.isRequiredDataGridViewCheckBoxColumn.MinimumWidth = 6;
             this.isRequiredDataGridViewCheckBoxColumn.Name = "isRequiredDataGridViewCheckBoxColumn";
             this.isRequiredDataGridViewCheckBoxColumn.ReadOnly = true;
-            this.isRequiredDataGridViewCheckBoxColumn.Width = 125;
+            this.isRequiredDataGridViewCheckBoxColumn.Width = 80;
             // 
             // entityModelBindingSource
             // 
@@ -203,11 +235,17 @@ namespace PlatformCodeBuilder
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(965, 471);
+            this.tabControl1.Size = new System.Drawing.Size(1003, 471);
             this.tabControl1.TabIndex = 15;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label9);
+            this.tabPage1.Controls.Add(this.txtDetail);
+            this.tabPage1.Controls.Add(this.chkHasDetail);
+            this.tabPage1.Controls.Add(this.label8);
+            this.tabPage1.Controls.Add(this.txtParent);
+            this.tabPage1.Controls.Add(this.chkHasParent);
             this.tabPage1.Controls.Add(this.groupBox2);
             this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Controls.Add(this.label3);
@@ -220,10 +258,62 @@ namespace PlatformCodeBuilder
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(957, 442);
+            this.tabPage1.Size = new System.Drawing.Size(995, 442);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "配置";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(567, 68);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(100, 15);
+            this.label9.TabIndex = 31;
+            this.label9.Text = "子表Entity名";
+            // 
+            // txtDetail
+            // 
+            this.txtDetail.Location = new System.Drawing.Point(673, 64);
+            this.txtDetail.Name = "txtDetail";
+            this.txtDetail.Size = new System.Drawing.Size(191, 25);
+            this.txtDetail.TabIndex = 30;
+            // 
+            // chkHasDetail
+            // 
+            this.chkHasDetail.AutoSize = true;
+            this.chkHasDetail.Location = new System.Drawing.Point(450, 66);
+            this.chkHasDetail.Name = "chkHasDetail";
+            this.chkHasDetail.Size = new System.Drawing.Size(89, 19);
+            this.chkHasDetail.TabIndex = 29;
+            this.chkHasDetail.Text = "包含子表";
+            this.chkHasDetail.UseVisualStyleBackColor = true;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(567, 27);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(100, 15);
+            this.label8.TabIndex = 28;
+            this.label8.Text = "父表Entity名";
+            // 
+            // txtParent
+            // 
+            this.txtParent.Location = new System.Drawing.Point(673, 23);
+            this.txtParent.Name = "txtParent";
+            this.txtParent.Size = new System.Drawing.Size(191, 25);
+            this.txtParent.TabIndex = 27;
+            // 
+            // chkHasParent
+            // 
+            this.chkHasParent.AutoSize = true;
+            this.chkHasParent.Location = new System.Drawing.Point(450, 25);
+            this.chkHasParent.Name = "chkHasParent";
+            this.chkHasParent.Size = new System.Drawing.Size(89, 19);
+            this.chkHasParent.TabIndex = 26;
+            this.chkHasParent.Text = "包含父表";
+            this.chkHasParent.UseVisualStyleBackColor = true;
             // 
             // groupBox2
             // 
@@ -375,6 +465,10 @@ namespace PlatformCodeBuilder
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.label11);
+            this.tabPage2.Controls.Add(this.textBox5);
+            this.tabPage2.Controls.Add(this.label10);
+            this.tabPage2.Controls.Add(this.textBox2);
             this.tabPage2.Controls.Add(this.btnDel);
             this.tabPage2.Controls.Add(this.label7);
             this.tabPage2.Controls.Add(this.ddlType);
@@ -394,14 +488,48 @@ namespace PlatformCodeBuilder
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(957, 442);
+            this.tabPage2.Size = new System.Drawing.Size(995, 442);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "数据属性";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(777, 363);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(52, 15);
+            this.label11.TabIndex = 20;
+            this.label11.Text = "枚举值";
+            // 
+            // textBox5
+            // 
+            this.textBox5.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.entityModelBindingSource, "EnumValue", true));
+            this.textBox5.Location = new System.Drawing.Point(835, 360);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(139, 25);
+            this.textBox5.TabIndex = 19;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(532, 363);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(67, 15);
+            this.label10.TabIndex = 18;
+            this.label10.Text = "枚举名称";
+            // 
+            // textBox2
+            // 
+            this.textBox2.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.entityModelBindingSource, "EnumName", true));
+            this.textBox2.Location = new System.Drawing.Point(605, 360);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(139, 25);
+            this.textBox2.TabIndex = 17;
+            // 
             // btnDel
             // 
-            this.btnDel.Location = new System.Drawing.Point(843, 397);
+            this.btnDel.Location = new System.Drawing.Point(890, 397);
             this.btnDel.Name = "btnDel";
             this.btnDel.Size = new System.Drawing.Size(84, 28);
             this.btnDel.TabIndex = 16;
@@ -412,7 +540,7 @@ namespace PlatformCodeBuilder
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(292, 321);
+            this.label7.Location = new System.Drawing.Point(279, 321);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(67, 15);
             this.label7.TabIndex = 15;
@@ -432,14 +560,14 @@ namespace PlatformCodeBuilder
             "bool",
             "enum",
             "DateTime"});
-            this.ddlType.Location = new System.Drawing.Point(365, 318);
+            this.ddlType.Location = new System.Drawing.Point(352, 318);
             this.ddlType.Name = "ddlType";
             this.ddlType.Size = new System.Drawing.Size(144, 23);
             this.ddlType.TabIndex = 14;
             // 
             // btnAdd
             // 
-            this.btnAdd.Location = new System.Drawing.Point(843, 356);
+            this.btnAdd.Location = new System.Drawing.Point(780, 397);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(84, 28);
             this.btnAdd.TabIndex = 13;
@@ -495,7 +623,7 @@ namespace PlatformCodeBuilder
             // 
             this.chkIsNull.AutoSize = true;
             this.chkIsNull.DataBindings.Add(new System.Windows.Forms.Binding("CheckState", this.entityModelBindingSource, "IsNull", true));
-            this.chkIsNull.Location = new System.Drawing.Point(581, 362);
+            this.chkIsNull.Location = new System.Drawing.Point(799, 320);
             this.chkIsNull.Name = "chkIsNull";
             this.chkIsNull.Size = new System.Drawing.Size(74, 19);
             this.chkIsNull.TabIndex = 8;
@@ -505,7 +633,7 @@ namespace PlatformCodeBuilder
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(578, 321);
+            this.label6.Location = new System.Drawing.Point(532, 321);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(67, 15);
             this.label6.TabIndex = 7;
@@ -514,7 +642,7 @@ namespace PlatformCodeBuilder
             // txtLenght
             // 
             this.txtLenght.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.entityModelBindingSource, "Length", true));
-            this.txtLenght.Location = new System.Drawing.Point(651, 318);
+            this.txtLenght.Location = new System.Drawing.Point(605, 318);
             this.txtLenght.Name = "txtLenght";
             this.txtLenght.Size = new System.Drawing.Size(139, 25);
             this.txtLenght.TabIndex = 6;
@@ -533,7 +661,7 @@ namespace PlatformCodeBuilder
             this.txtDescription.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.entityModelBindingSource, "Describe", true));
             this.txtDescription.Location = new System.Drawing.Point(78, 360);
             this.txtDescription.Name = "txtDescription";
-            this.txtDescription.Size = new System.Drawing.Size(427, 25);
+            this.txtDescription.Size = new System.Drawing.Size(418, 25);
             this.txtDescription.TabIndex = 4;
             // 
             // label4
@@ -557,7 +685,7 @@ namespace PlatformCodeBuilder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(965, 471);
+            this.ClientSize = new System.Drawing.Size(1003, 471);
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -599,15 +727,6 @@ namespace PlatformCodeBuilder
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colNameDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dateTypeDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn lengthDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn isNullDataGridViewCheckBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn describeDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn isFilterDataGridViewCheckBoxColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn isShowInListDataGridViewCheckBoxColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn isCreateOrEditDataGridViewCheckBoxColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn isRequiredDataGridViewCheckBoxColumn;
         private System.Windows.Forms.BindingSource entityModelBindingSource;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox ddlType;
@@ -624,5 +743,26 @@ namespace PlatformCodeBuilder
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtColName;
         private System.Windows.Forms.Button btnDel;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox txtDetail;
+        private System.Windows.Forms.CheckBox chkHasDetail;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox txtParent;
+        private System.Windows.Forms.CheckBox chkHasParent;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colNameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dateTypeDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn lengthDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn isNullDataGridViewCheckBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn describeDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn EnumName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn EnumValue;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn isFilterDataGridViewCheckBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn isShowInListDataGridViewCheckBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn isCreateOrEditDataGridViewCheckBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn isRequiredDataGridViewCheckBoxColumn;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox textBox2;
     }
 }

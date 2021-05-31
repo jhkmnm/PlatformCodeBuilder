@@ -37,6 +37,17 @@ namespace PlatformCodeBuilder.Models.TemplateModels
         public string CreateParameters { get; set; }
 
         public List<ClassProperty> ClassPropertys { get; set; }
+
+        /// <summary>
+        /// 是否有子表
+        /// </summary>
+        public bool HasDetail { get; set; }
+        /// <summary>
+        /// 子表实体名称
+        /// </summary>
+        public string DetailEntityName { get; set; }
+        public bool HasParent { get; set; }
+        public string ParentEntityName { get; set; }
     }
 
     /// <summary>
@@ -105,5 +116,19 @@ namespace PlatformCodeBuilder.Models.TemplateModels
             public string Value { get; set; }
             public string NameValue { get; set; }
         }
+    }
+
+    public class EnumEntity
+    {
+        public string NameSpace { get; set; }
+        public string EnumName { get; set; }
+        public string EnumDes { get; set; }
+        public List<EnumValue> Values { get; set; }
+    }
+
+    public class EnumValue
+    {
+        public string EnumValueName { get; set; }
+        public int? Value { get; set; }
     }
 }
